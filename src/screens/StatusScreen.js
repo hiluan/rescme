@@ -18,20 +18,20 @@ const StatusScreen = () => {
   const animateButton = () => {
     Animated.sequence([
       Animated.timing(scaleAnimation, {
-        toValue: 3,
-        duration: 100,
+        toValue: 5,
+        duration: 200,
         useNativeDriver: true,
         easing: Easing.ease,
       }),
       Animated.timing(scaleAnimation, {
         toValue: 1,
-        duration: 100,
+        duration: 0,
         useNativeDriver: true,
         easing: Easing.ease,
       }),
     ]).start(() => {
       setIsAlerted(!isAlerted);
-      isAlerted ? null : navigation.navigate("Chats");
+      // isAlerted ? null : navigation.navigate("Chats");
     });
     // navigation.navigate("Group Info", { id: chatroomID })
     // navigation.navigate("Chats");
@@ -74,9 +74,18 @@ const StatusScreen = () => {
             },
           ]}
         >
-          <Text>{isAlerted ? "Mark as Safe!" : "Alerted!"}</Text>
+          <Text
+            style={[styles.buttonText, { color: isAlerted ? "red" : "white" }]}
+          >
+            {isAlerted ? "Mark as Safe!" : "Alert!"}
+          </Text>
         </Animated.View>
       </Pressable>
+      <Text style={[styles.subtitle, { color: isAlerted ? "white" : "red" }]}>
+        {isAlerted
+          ? "Let your RescMe contacts know you're safe."
+          : "Let your RescMe contacts know you're in danger."}
+      </Text>
     </View>
   );
 };
@@ -102,5 +111,12 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
+  },
+  buttonText: {
+    fontSize: 30,
+  },
+  subtitle: {
+    fontSize: 13,
+    marginTop: 20,
   },
 });
