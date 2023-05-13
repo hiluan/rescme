@@ -6,10 +6,12 @@ import {
   Animated,
   Easing,
 } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
+import { ThemeContext } from "../context";
 
 const StatusScreen = () => {
+  const { theme } = useContext(ThemeContext); // Access the theme
   const [isAlerted, setIsAlerted] = useState(false);
   const opacityAnimation = useRef(new Animated.Value(1)).current;
   const scaleAnimation = useRef(new Animated.Value(1)).current;
@@ -34,7 +36,7 @@ const StatusScreen = () => {
       // isAlerted ? null : navigation.navigate("Chats");
     });
     // navigation.navigate("Group Info", { id: chatroomID })
-    // navigation.navigate("Chats");
+    navigation.navigate("Chats");
   };
 
   useEffect(() => {
@@ -60,7 +62,7 @@ const StatusScreen = () => {
     <View
       style={[
         styles.container,
-        { backgroundColor: isAlerted ? "red" : "white" },
+        { backgroundColor: isAlerted ? "red" : theme.backgroundColor },
       ]}
     >
       <Pressable onPress={animateButton} style={styles.button}>
@@ -69,7 +71,7 @@ const StatusScreen = () => {
             styles.buttonInner,
             {
               opacity: opacityAnimation,
-              backgroundColor: isAlerted ? "white" : "red",
+              backgroundColor: isAlerted ? theme.backgroundColor : "red",
               transform: [{ scale: scaleAnimation }],
             },
           ]}
