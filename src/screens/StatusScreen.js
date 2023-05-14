@@ -11,7 +11,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { ThemeContext } from "../context";
 
 const StatusScreen = () => {
-  const { theme } = useContext(ThemeContext); // Access the theme
+  const { theme } = useContext(ThemeContext);
   const [isAlerted, setIsAlerted] = useState(false);
   const opacityAnimation = useRef(new Animated.Value(1)).current;
   const scaleAnimation = useRef(new Animated.Value(1)).current;
@@ -62,7 +62,11 @@ const StatusScreen = () => {
     <View
       style={[
         styles.container,
-        { backgroundColor: isAlerted ? "red" : theme.backgroundColor },
+        {
+          backgroundColor: isAlerted
+            ? theme.redAccent[500]
+            : theme.background[950],
+        },
       ]}
     >
       <Pressable onPress={animateButton} style={styles.button}>
@@ -71,19 +75,31 @@ const StatusScreen = () => {
             styles.buttonInner,
             {
               opacity: opacityAnimation,
-              backgroundColor: isAlerted ? theme.backgroundColor : "red",
+              backgroundColor: !isAlerted
+                ? theme.redAccent[500]
+                : theme.background[950],
               transform: [{ scale: scaleAnimation }],
             },
           ]}
         >
           <Text
-            style={[styles.buttonText, { color: isAlerted ? "red" : "white" }]}
+            style={[
+              styles.buttonText,
+              {
+                color: isAlerted ? theme.redAccent[500] : theme.background[950],
+              },
+            ]}
           >
             {isAlerted ? "Mark as Safe!" : "Alert!"}
           </Text>
         </Animated.View>
       </Pressable>
-      <Text style={[styles.subtitle, { color: isAlerted ? "white" : "red" }]}>
+      <Text
+        style={[
+          styles.subtitle,
+          { color: !isAlerted ? theme.redAccent[500] : theme.background[950] },
+        ]}
+      >
         {isAlerted
           ? "Let your RescMe contacts know you're safe."
           : "Let your RescMe contacts know you're in danger."}
@@ -99,7 +115,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "white",
   },
   button: {
     backgroundColor: "transparent",

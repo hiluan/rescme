@@ -3,15 +3,19 @@ import { NavigationContainer } from "@react-navigation/native";
 import TabNavigator from "./TabNavigator";
 import ChatScreen from "../screens/ChatScreen";
 import StatusScreen from "../screens/StatusScreen";
+import { ThemeContext } from "../context";
+import { useContext } from "react";
 
 const Stack = createNativeStackNavigator();
 
 const Navigator = () => {
+  const { theme } = useContext(ThemeContext);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          headerStyle: { backgroundColor: "whitesmoke" },
+          headerStyle: { backgroundColor: theme.background[1000] },
         }}
       >
         <Stack.Screen

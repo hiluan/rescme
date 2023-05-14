@@ -5,7 +5,7 @@ import { ThemeContext } from "../../context";
 import { Ionicons } from "@expo/vector-icons";
 
 const ThemesToggle = () => {
-  const { setTheme, systemTheme } = useContext(ThemeContext);
+  const { theme, setTheme, systemTheme } = useContext(ThemeContext);
   const [selectedText, setSelectedText] = useState("System");
 
   const handleThemeChange = (selectedMode, text) => {
@@ -31,10 +31,12 @@ const ThemesToggle = () => {
         onPress={() => handleThemeChange(selectedTheme, text)}
       >
         <View style={styles.radioLeft}>
-          <Ionicons name={themeIcon} size={24} color="black" />
-          <Text style={styles.radioText}>{text}</Text>
+          <Ionicons name={themeIcon} size={24} color={theme.gray[300]} />
+          <Text style={[styles.radioText, { color: theme.gray[100] }]}>
+            {text}
+          </Text>
         </View>
-        <View style={[styles.radioRight]}>
+        <View style={styles.radioRight}>
           <Ionicons
             name={
               isSelected
@@ -42,7 +44,7 @@ const ThemesToggle = () => {
                 : "ios-radio-button-off-outline"
             }
             size={24}
-            color="black"
+            color={theme.gray[300]}
           />
         </View>
       </TouchableOpacity>
@@ -51,28 +53,65 @@ const ThemesToggle = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Theme</Text>
-      {renderRadioButton("System")}
-      {renderRadioButton("Light")}
-      {renderRadioButton("Dark")}
+      <View
+        style={[
+          styles.table,
+          {
+            borderColor: theme.background[600],
+            backgroundColor: theme.background[1000],
+          },
+        ]}
+      >
+        <View style={styles.tableRow}>
+          <View style={styles.tableCell}>{renderRadioButton("System")}</View>
+        </View>
+        <View
+          style={[
+            styles.separator,
+            { borderBottomColor: theme.background[600] },
+          ]}
+        />
+        <View style={styles.tableRow}>
+          <View style={styles.tableCell}>{renderRadioButton("Light")}</View>
+        </View>
+        <View
+          style={[
+            styles.separator,
+            { borderBottomColor: theme.background[600] },
+          ]}
+        />
+        <View style={styles.tableRow}>
+          <View style={styles.tableCell}>{renderRadioButton("Dark")}</View>
+        </View>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 16,
+    marginLeft: 16,
+    marginRight: 16,
   },
   title: {
     marginBottom: 16,
+  },
+  table: {
+    borderWidth: 0.5,
+    borderRadius: 10,
+    overflow: "hidden", // Ensure border radius is applied to the table
+  },
+  tableRow: {
+    flexDirection: "row",
+  },
+  tableCell: {
+    flex: 1,
+    padding: 14,
   },
   radioButton: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 8,
-    marginBottom: 8,
   },
   radioLeft: {
     flexDirection: "row",
@@ -81,6 +120,12 @@ const styles = StyleSheet.create({
   radioText: {
     fontSize: 16,
     marginLeft: 12,
+  },
+  radioRight: {
+    marginLeft: 8,
+  },
+  separator: {
+    borderBottomWidth: 0.5,
   },
 });
 
