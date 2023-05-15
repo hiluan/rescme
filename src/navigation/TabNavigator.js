@@ -18,7 +18,7 @@ const TabNavigator = () => {
   const icon = (iconName) => {
     return ({ color, size, focused }) => (
       <Ionicons
-        name={iconName}
+        name={focused ? iconName : iconName + "-outline"}
         color={focused ? tabBarActiveTintColor : tabBarInactiveTintColor}
         size={size}
       />
@@ -49,35 +49,24 @@ const TabNavigator = () => {
       <Tab.Screen
         name="Status"
         component={StatusScreen}
-        options={{ tabBarIcon: icon("logo-whatsapp") }}
+        options={{ tabBarIcon: icon("alert-circle") }}
       />
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Chats"
         component={ChatsScreen}
-        options={({ navigation }) => ({
-          tabBarIcon: icon("ios-chatbubbles-sharp"),
-          headerRight: () => (
-            <Entypo
-              onPress={() => navigation.navigate("Contacts")}
-              name="new-message"
-              size={18}
-              color={theme.gray[0]}
-              style={{
-                marginRight: 10,
-              }}
-            />
-          ),
-        })}
-      /> */}
+        options={{
+          tabBarIcon: icon("chatbubbles"),
+        }}
+      />
       <Tab.Screen
         name="Contacts"
         component={ContactsScreen}
-        options={{ tabBarIcon: icon("settings-outline") }}
+        options={{ tabBarIcon: icon("people") }}
       />
       <Tab.Screen
         name="Settings"
         component={SettingScreen}
-        options={{ tabBarIcon: icon("settings-outline") }}
+        options={{ tabBarIcon: icon("settings") }}
       />
     </Tab.Navigator>
   );

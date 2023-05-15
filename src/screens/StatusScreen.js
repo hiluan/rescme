@@ -34,9 +34,8 @@ const StatusScreen = () => {
     ]).start(() => {
       setIsAlerted(!isAlerted);
       // isAlerted ? null : navigation.navigate("Chats");
+      // navigation.navigate("Group Info", { id: chatroomID })
     });
-    // navigation.navigate("Group Info", { id: chatroomID })
-    navigation.navigate("Chats");
   };
 
   useEffect(() => {
@@ -90,7 +89,7 @@ const StatusScreen = () => {
               },
             ]}
           >
-            {isAlerted ? "Mark as Safe!" : "Alert!"}
+            {isAlerted ? "I'm Safe!" : "I Need Help!"}
           </Text>
         </Animated.View>
       </Pressable>
@@ -101,8 +100,8 @@ const StatusScreen = () => {
         ]}
       >
         {isAlerted
-          ? "Let your RescMe contacts know you're safe."
-          : "Let your RescMe contacts know you're in danger."}
+          ? "Press the button to inform you're safe."
+          : "Press the button to inform you need help ASAP."}
       </Text>
     </View>
   );

@@ -20,7 +20,7 @@ const ThemesToggle = () => {
         ? "md-sunny"
         : text === "Dark"
         ? "md-moon"
-        : "stop-circle";
+        : "ios-contrast";
 
     const selectedTheme =
       text === "Dark" ? darkTheme : text === "Light" ? lightTheme : systemTheme;
