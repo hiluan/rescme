@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useRef, useContext } from "react";
 import {
   View,
   Text,
@@ -5,9 +6,10 @@ import {
   Pressable,
   Animated,
   Easing,
+  PanResponder,
+  Dimensions,
 } from "react-native";
-import React, { useState, useEffect, useRef, useContext } from "react";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { ThemeContext } from "../context";
 
 const StatusScreen = () => {
@@ -16,6 +18,7 @@ const StatusScreen = () => {
   const opacityAnimation = useRef(new Animated.Value(1)).current;
   const scaleAnimation = useRef(new Animated.Value(1)).current;
   const navigation = useNavigation();
+  const position = useState(new Animated.Value(0))[0];
 
   const animateButton = () => {
     Animated.sequence([
@@ -25,6 +28,7 @@ const StatusScreen = () => {
         useNativeDriver: true,
         easing: Easing.ease,
       }),
+      // scale back to original size
       Animated.timing(scaleAnimation, {
         toValue: 1,
         duration: 0,
@@ -32,7 +36,7 @@ const StatusScreen = () => {
         easing: Easing.ease,
       }),
     ]).start(() => {
-      setIsAlerted(!isAlerted);
+      setIsAlerted(true);
       // isAlerted ? null : navigation.navigate("Chats");
       // navigation.navigate("Group Info", { id: chatroomID })
     });
@@ -57,6 +61,56 @@ const StatusScreen = () => {
     ).start();
   }, []);
 
+  // const handleSwipeUp = () => {
+  //   setIsAlerted(false);
+  //   Animated.spring(position, {
+  //     toValue: 0,
+  //     useNativeDriver: true,
+  //   }).start();
+  // };
+
+  ///////////////////////////
+  // swipe up to mark safe
+
+  const handleSwipeUp = () => {
+    Animated.timing(position, {
+      toValue: 0,
+      duration: 0,
+      useNativeDriver: true,
+    }).start(() => {
+      setIsAlerted(false);
+    });
+  };
+
+  // height of the device's screen
+  const screenHeight = Dimensions.get("screen").height;
+  const swipeThreshold = screenHeight * 0.35; // Adjust the percentage as needed
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderRelease: (_, gestureState) => {
+        // swipe up to this position
+        if (gestureState.dy < -swipeThreshold) {
+          handleSwipeUp();
+        } else {
+          Animated.spring(position, {
+            toValue: 0,
+            useNativeDriver: true,
+          }).start();
+        }
+      },
+      onPanResponderMove: Animated.event([null, { dy: position }], {
+        useNativeDriver: false,
+      }),
+    })
+  ).current;
+
+  const animatedStyles = {
+    backgroundColor: theme.background[950],
+    transform: [{ translateY: position }],
+  };
+
   return (
     <View
       style={[
@@ -68,31 +122,44 @@ const StatusScreen = () => {
         },
       ]}
     >
-      <Pressable onPress={animateButton} style={styles.button}>
-        <Animated.View
-          style={[
-            styles.buttonInner,
-            {
-              opacity: opacityAnimation,
-              backgroundColor: !isAlerted
-                ? theme.redAccent[500]
-                : theme.background[950],
-              transform: [{ scale: scaleAnimation }],
-            },
-          ]}
-        >
-          <Text
+      {!isAlerted ? (
+        <Pressable onPress={animateButton} style={styles.button}>
+          <Animated.View
             style={[
-              styles.buttonText,
+              styles.buttonInner,
               {
-                color: isAlerted ? theme.redAccent[500] : theme.background[950],
+                opacity: opacityAnimation,
+                backgroundColor: !isAlerted
+                  ? theme.redAccent[500]
+                  : theme.background[950],
+                transform: [{ scale: scaleAnimation }],
               },
             ]}
           >
-            {isAlerted ? "I'm Safe!" : "I Need Help!"}
+            <Text
+              style={[
+                styles.buttonText,
+                {
+                  color: isAlerted
+                    ? theme.redAccent[500]
+                    : theme.background[950],
+                },
+              ]}
+            >
+              I Need Help!
+            </Text>
+          </Animated.View>
+        </Pressable>
+      ) : (
+        <Animated.View
+          {...panResponder.panHandlers}
+          style={[styles.buttonInner, animatedStyles]}
+        >
+          <Text style={[styles.buttonText, { color: theme.redAccent[500] }]}>
+            I'm Safe.
           </Text>
         </Animated.View>
-      </Pressable>
+      )}
       <Text
         style={[
           styles.subtitle,
@@ -100,7 +167,7 @@ const StatusScreen = () => {
         ]}
       >
         {isAlerted
-          ? "Press the button to inform you're safe."
+          ? "Swipe the button up to inform you're safe."
           : "Press the button to inform you need help ASAP."}
       </Text>
     </View>

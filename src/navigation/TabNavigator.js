@@ -38,9 +38,8 @@ const TabNavigator = () => {
           backgroundColor: theme.background[950],
           // elevation: 0, // Remove the header shadow
         },
-
-        // headerTintColor: theme.gray[200],
-        headerTintColor: theme.gray[950], // use this to 'hide' header but keep safearea
+        headerTintColor: theme.gray[200],
+        // headerTintColor: theme.gray[950], // use this to 'hide' header but keep safearea
         // headerShown: false, // Hide the header
         tabBarActiveTintColor,
         tabBarInactiveTintColor,
