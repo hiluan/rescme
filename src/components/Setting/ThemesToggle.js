@@ -57,7 +57,7 @@ const ThemesToggle = () => {
         style={[
           styles.table,
           {
-            borderColor: theme.background[600],
+            borderColor: theme.background[400],
             backgroundColor: theme.background[1000],
           },
         ]}
@@ -66,19 +66,13 @@ const ThemesToggle = () => {
           <View style={styles.tableCell}>{renderRadioButton("System")}</View>
         </View>
         <View
-          style={[
-            styles.separator,
-            { borderBottomColor: theme.background[600] },
-          ]}
+          style={[styles.separator, { borderBottomColor: theme.gray[600] }]}
         />
         <View style={styles.tableRow}>
           <View style={styles.tableCell}>{renderRadioButton("Light")}</View>
         </View>
         <View
-          style={[
-            styles.separator,
-            { borderBottomColor: theme.background[600] },
-          ]}
+          style={[styles.separator, { borderBottomColor: theme.gray[600] }]}
         />
         <View style={styles.tableRow}>
           <View style={styles.tableCell}>{renderRadioButton("Dark")}</View>
@@ -125,7 +119,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   separator: {
-    borderBottomWidth: 0.5,
+    borderWidth: 0.4,
   },
 });
 

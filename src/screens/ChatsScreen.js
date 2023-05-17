@@ -6,9 +6,14 @@ import {
   StyleSheet,
   Animated,
 } from "react-native";
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
+import { ThemeContext } from "../context";
 
 const ChatsScreen = () => {
+  const { theme } = useContext(ThemeContext);
+  // const backgroundColorStyle = { backgroundColor: theme.background[950] };
+  // const colorStyle = { color: theme.gray[950] };
+
   const position = new Animated.Value(0);
 
   const handleSwipeUp = () => {
@@ -58,7 +63,9 @@ const ChatsScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: theme.background[950] }]}
+    >
       <Animated.Text
         {...panResponder.panHandlers}
         style={[styles.text, animatedStyles]}

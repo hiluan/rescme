@@ -59,7 +59,7 @@ const StatusScreen = () => {
         }),
       ])
     ).start();
-  }, []);
+  }, [, isAlerted]);
 
   // const handleSwipeUp = () => {
   //   setIsAlerted(false);
@@ -106,11 +106,13 @@ const StatusScreen = () => {
     })
   ).current;
 
-  const animatedStyles = {
-    backgroundColor: theme.background[950],
-    transform: [{ translateY: position }],
+  const animatedSwipeUpStyles = { transform: [{ translateY: position }] };
+  const backgroundColorStyle = {
+    backgroundColor: !isAlerted ? theme.redAccent[500] : theme.background[950],
   };
-
+  const colorStyle = {
+    color: isAlerted ? theme.redAccent[500] : theme.gray[950],
+  };
   return (
     <View
       style={[
@@ -127,37 +129,29 @@ const StatusScreen = () => {
           <Animated.View
             style={[
               styles.buttonInner,
+              backgroundColorStyle,
               {
                 opacity: opacityAnimation,
-                backgroundColor: !isAlerted
-                  ? theme.redAccent[500]
-                  : theme.background[950],
                 transform: [{ scale: scaleAnimation }],
               },
             ]}
           >
-            <Text
-              style={[
-                styles.buttonText,
-                {
-                  color: isAlerted
-                    ? theme.redAccent[500]
-                    : theme.background[950],
-                },
-              ]}
-            >
-              I Need Help!
-            </Text>
+            <Text style={[styles.buttonText, colorStyle]}>I Need Help!</Text>
           </Animated.View>
         </Pressable>
       ) : (
         <Animated.View
           {...panResponder.panHandlers}
-          style={[styles.buttonInner, animatedStyles]}
+          style={[
+            styles.buttonInner,
+            backgroundColorStyle,
+            animatedSwipeUpStyles,
+            {
+              opacity: opacityAnimation,
+            },
+          ]}
         >
-          <Text style={[styles.buttonText, { color: theme.redAccent[500] }]}>
-            I'm Safe.
-          </Text>
+          <Text style={[styles.buttonText, colorStyle]}>I'm Safe.</Text>
         </Animated.View>
       )}
       <Text

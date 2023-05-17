@@ -29,18 +29,21 @@ const TabNavigator = () => {
     <Tab.Navigator
       initialRouteName="Status"
       screenOptions={{
+        // headerShown: false, // Hide the header
+        // headerTransparent: true, // Make the header transparent
+        headerStyle: {
+          backgroundColor: theme.background[950],
+          borderBottomWidth: 0,
+          shadowOpacity: 0,
+          elevation: 0, // Remove the header shadow
+        },
+        headerTintColor: theme.gray[200],
         tabBarStyle: {
           backgroundColor: theme.background[1000],
           borderTopWidth: 0, // Remove the top border line
           elevation: 0, // Remove the header shadow
         },
-        headerStyle: {
-          backgroundColor: theme.background[950],
-          // elevation: 0, // Remove the header shadow
-        },
-        headerTintColor: theme.gray[200],
-        // headerTintColor: theme.gray[950], // use this to 'hide' header but keep safearea
-        // headerShown: false, // Hide the header
+
         tabBarActiveTintColor,
         tabBarInactiveTintColor,
       }}
