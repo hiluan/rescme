@@ -1,4 +1,3 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
 import {
   View,
   Text,
@@ -9,12 +8,13 @@ import {
   PanResponder,
   Dimensions,
 } from "react-native";
+import { useState, useEffect, useRef, useContext } from "react";
+import { AlertContext, ThemeContext } from "../context";
 import { useNavigation } from "@react-navigation/native";
-import { ThemeContext } from "../context";
 
 const StatusScreen = () => {
   const { theme } = useContext(ThemeContext);
-  const [isAlerted, setIsAlerted] = useState(false);
+  const { isAlerted, setIsAlerted } = useContext(AlertContext);
   const opacityAnimation = useRef(new Animated.Value(1)).current;
   const scaleAnimation = useRef(new Animated.Value(1)).current;
   const navigation = useNavigation();

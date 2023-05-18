@@ -1,17 +1,16 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
-import { ThemeProvider } from "./src/context/ThemeContext"; // Import the ThemeProvider
-
+import { Providers } from "./src/context";
+import { StatusBar } from "expo-status-bar";
 import Navigator from "./src/navigation/StackNavigator";
 
 export default function App() {
   return (
-    <ThemeProvider>
+    <Providers>
       <View style={[styles.container]}>
         <Navigator />
         <StatusBar style="auto" />
       </View>
-    </ThemeProvider>
+    </Providers>
   );
 }
 
