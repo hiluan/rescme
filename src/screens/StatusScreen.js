@@ -23,8 +23,14 @@ const StatusScreen = () => {
   const animateButton = () => {
     Animated.sequence([
       Animated.timing(scaleAnimation, {
-        toValue: 5,
+        toValue: 1.3,
         duration: 200,
+        useNativeDriver: true,
+        easing: Easing.ease,
+      }),
+      Animated.timing(scaleAnimation, {
+        toValue: 0.9,
+        duration: 100,
         useNativeDriver: true,
         easing: Easing.ease,
       }),
@@ -37,7 +43,7 @@ const StatusScreen = () => {
       }),
     ]).start(() => {
       setIsAlerted(true);
-      // isAlerted ? null : navigation.navigate("Chats");
+      isAlerted ? null : navigation.navigate("Chats");
       // navigation.navigate("Group Info", { id: chatroomID })
     });
   };
@@ -84,7 +90,7 @@ const StatusScreen = () => {
 
   // height of the device's screen
   const screenHeight = Dimensions.get("screen").height;
-  const swipeThreshold = screenHeight * 0.35; // Adjust the percentage as needed
+  const swipeThreshold = screenHeight * 0.27; // Adjust the percentage as needed
 
   const panResponder = useRef(
     PanResponder.create({
@@ -106,7 +112,24 @@ const StatusScreen = () => {
     })
   ).current;
 
-  const animatedSwipeUpStyles = { transform: [{ translateY: position }] };
+  // const animatedSwipeUpStyles = {
+  //   transform: [{ translateY: position }],
+  //   opacity: position.interpolate({
+  //     inputRange: [0, -swipeThreshold],
+  //     outputRange: [1, 0],
+  //     extrapolate: "clamp",
+  //   }),
+  // };
+
+  const animatedSwipeUpStyles = {
+    transform: [{ translateY: position }],
+    opacity: position.interpolate({
+      inputRange: [-swipeThreshold, 0],
+      outputRange: [0, 1],
+      extrapolate: "clamp",
+    }),
+  };
+
   const backgroundColorStyle = {
     backgroundColor: !isAlerted ? theme.redAccent[500] : theme.background[950],
   };
@@ -146,9 +169,9 @@ const StatusScreen = () => {
             styles.buttonInner,
             backgroundColorStyle,
             animatedSwipeUpStyles,
-            {
-              opacity: opacityAnimation,
-            },
+            // {
+            //   opacity: opacityAnimation,
+            // },
           ]}
         >
           <Text style={[styles.buttonText, colorStyle]}>I'm Safe.</Text>

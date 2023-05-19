@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, Entypo } from "@expo/vector-icons";
-import { ThemeContext } from "../context";
+import { AlertContext, ThemeContext } from "../context";
 import { useContext } from "react";
 import ContactsScreen from "../screens/ContactsScreen";
 import SettingScreen from "../screens/SettingScreen";
@@ -11,6 +11,7 @@ const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
   const { theme } = useContext(ThemeContext);
+  const { isAlerted } = useContext(AlertContext);
   const tabBarActiveTintColor = theme.gray[0];
   const tabBarInactiveTintColor = theme.gray[600];
 
@@ -32,7 +33,9 @@ const TabNavigator = () => {
         // headerShown: false, // Hide the header
         // headerTransparent: true, // Make the header transparent
         headerStyle: {
-          backgroundColor: theme.background[950],
+          backgroundColor: isAlerted
+            ? theme.redAccent[500]
+            : theme.background[950],
           borderBottomWidth: 0,
           shadowOpacity: 0,
           elevation: 0, // Remove the header shadow
