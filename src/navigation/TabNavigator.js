@@ -1,7 +1,7 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons, Entypo } from "@expo/vector-icons";
 import { AlertContext, ThemeContext } from "../context";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useContext } from "react";
+import { Ionicons } from "@expo/vector-icons";
 import ContactsScreen from "../screens/ContactsScreen";
 import SettingScreen from "../screens/SettingScreen";
 import StatusScreen from "../screens/StatusScreen";
@@ -26,30 +26,33 @@ const TabNavigator = () => {
     );
   };
 
+  const getHeaderBackgroundColor = (routeName) => {
+    if (isAlerted && routeName === "Status") {
+      return theme.redAccent[500];
+    } else {
+      return theme.background[950];
+    }
+  };
+
   return (
     <Tab.Navigator
       initialRouteName="Status"
-      screenOptions={{
-        // headerShown: false, // Hide the header
-        // headerTransparent: true, // Make the header transparent
+      screenOptions={({ route }) => ({
         headerStyle: {
-          backgroundColor: isAlerted
-            ? theme.redAccent[500]
-            : theme.background[950],
+          backgroundColor: getHeaderBackgroundColor(route.name),
           borderBottomWidth: 0,
           shadowOpacity: 0,
-          elevation: 0, // Remove the header shadow
+          elevation: 0,
         },
         headerTintColor: theme.gray[200],
         tabBarStyle: {
           backgroundColor: theme.background[1000],
-          borderTopWidth: 0, // Remove the top border line
-          elevation: 0, // Remove the header shadow
+          borderTopWidth: 0,
+          elevation: 0,
         },
-
         tabBarActiveTintColor,
         tabBarInactiveTintColor,
-      }}
+      })}
     >
       <Tab.Screen
         name="Status"
