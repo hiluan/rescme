@@ -1,10 +1,14 @@
+import {
+  ChatScreen,
+  ContactAddScreen,
+  ContactScreen,
+  StatusScreen,
+} from "../screens";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-import TabNavigator from "./TabNavigator";
-import ChatScreen from "../screens/ChatScreen";
-import StatusScreen from "../screens/StatusScreen";
 import { ThemeContext } from "../context";
 import { useContext } from "react";
+import TabNavigator from "./TabNavigator";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +29,8 @@ const Navigator = () => {
         />
         <Stack.Screen name="Status" component={StatusScreen} />
         <Stack.Screen name="Chat" component={ChatScreen} />
-        {/* <Stack.Screen name="Contacts" component={ContactsScreen} /> */}
+        <Stack.Screen name="Contact Add" component={ContactAddScreen} />
+        <Stack.Screen name="Contact" component={ContactScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

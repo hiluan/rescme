@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const ContactItem = () => {
+const ContactScreen = () => {
   return (
     <View>
-      <Text>ContactItem</Text>
+      <Text>ContactScreen</Text>
     </View>
   );
 };
 
-export default ContactItem;
+export default ContactScreen;

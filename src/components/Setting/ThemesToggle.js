@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   separator: {
-    borderWidth: 0.4,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
 });
 

@@ -69,7 +69,21 @@ const TabNavigator = () => {
       <Tab.Screen
         name="Contacts"
         component={ContactsScreen}
-        options={{ tabBarIcon: icon("people") }}
+        options={({ navigation }) => ({
+          tabBarIcon: icon("people"),
+          // headerRight: () => (
+          //   <Ionicons
+          //     onPress={() => navigation.navigate("Contact")}
+          //     name="add"
+          //     size={32}
+          //     color={theme.redAccent[500]}
+          //     style={{
+          //       marginRight: 20,
+          //     }}
+          //   />
+          // ),
+        })}
+        // options={{ tabBarIcon: icon("people") }}
       />
       <Tab.Screen
         name="Settings"
