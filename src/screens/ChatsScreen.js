@@ -89,3 +89,62 @@ const styles = StyleSheet.create({
 });
 
 export default ChatsScreen;
+
+// import React, { useEffect, useState } from "react";
+// import { StyleSheet, Dimensions } from "react-native";
+// import MapView, { Marker } from "react-native-maps";
+// import Geolocation from "react-native-geolocation-service";
+
+// // npm install react-native-maps react-native-geolocation-service @react-native-community/masked-view @react-navigation/native @react-navigation/stack
+// // expo install expo-location
+
+// const MapScreen = () => {
+//   const [currentLocation, setCurrentLocation] = useState(null);
+
+//   useEffect(() => {
+//     // Get current location
+//     Geolocation.getCurrentPosition(
+//       (position) => {
+//         const { latitude, longitude } = position.coords;
+//         setCurrentLocation({ latitude, longitude });
+//       },
+//       (error) => {
+//         console.log("Error getting current location:", error);
+//       },
+//       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+//     );
+//   }, []);
+
+//   return (
+//     <MapView
+//       style={styles.map}
+//       initialRegion={{
+//         latitude: currentLocation?.latitude || 0,
+//         longitude: currentLocation?.longitude || 0,
+//         latitudeDelta: 0.0922,
+//         longitudeDelta: 0.0421,
+//       }}
+//       showsUserLocation={true}
+//       followsUserLocation={true}
+//     >
+//       {currentLocation && (
+//         <Marker
+//           coordinate={{
+//             latitude: currentLocation.latitude,
+//             longitude: currentLocation.longitude,
+//           }}
+//           title="You are here"
+//         />
+//       )}
+//     </MapView>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   map: {
+//     width: Dimensions.get("window").width,
+//     height: Dimensions.get("window").height,
+//   },
+// });
+
+// export default MapScreen;

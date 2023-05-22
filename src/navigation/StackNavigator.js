@@ -19,7 +19,14 @@ const Navigator = () => {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          headerStyle: { backgroundColor: theme.background[1000] },
+          headerStyle: {
+            backgroundColor: theme.background[950],
+            shadowOpacity: 0,
+            elevation: 0,
+            borderBottomWidth: 0,
+          },
+          headerTintColor: theme.gray[200],
+          headerShadowVisible: false,
         }}
       >
         <Stack.Screen
@@ -29,7 +36,7 @@ const Navigator = () => {
         />
         <Stack.Screen name="Status" component={StatusScreen} />
         <Stack.Screen name="Chat" component={ChatScreen} />
-        <Stack.Screen name="Contact Add" component={ContactAddScreen} />
+        <Stack.Screen name="Add Contact" component={ContactAddScreen} />
         <Stack.Screen name="Contact" component={ContactScreen} />
       </Stack.Navigator>
     </NavigationContainer>

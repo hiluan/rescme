@@ -1,33 +1,33 @@
 import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
-import React, { useContext } from "react";
-import { ThemeContext } from "../context";
 import { ContactItem, contacts } from "../components/Contacts";
-import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
+import { ThemeContext } from "../context";
+import { useContext } from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 const ContactsScreen = () => {
   const navigation = useNavigation();
   const { theme } = useContext(ThemeContext);
-  const backgroundColor950 = { backgroundColor: theme.background[950] };
+  const background950 = { backgroundColor: theme.background[950] };
 
   return (
-    <View style={[styles.container, backgroundColor950]}>
+    <View style={[styles.container, background950]}>
       <Pressable
-        onPress={() => navigation.navigate("Contact Add")}
+        onPress={() => navigation.navigate("Add Contact")}
         style={[styles.addButton]}
       >
-        <Text style={[styles.addText, { color: theme.gray[100] }]}>
+        {/* <Text style={[styles.addText, { color: theme.gray[100] }]}>
           New Contact
-        </Text>
+        </Text> */}
         <View
           style={[
             styles.addIcon,
             {
-              backgroundColor: theme.background[100],
+              backgroundColor: theme.redAccent[500],
             },
           ]}
         >
-          <Ionicons name="add" size={24} color={theme.gray[950]} />
+          <Ionicons name="person-add" size={24} color={theme.gray[950]} />
         </View>
       </Pressable>
 
@@ -55,23 +55,23 @@ const styles = StyleSheet.create({
     padding: 15,
     paddingHorizontal: 20,
     position: "absolute", // Position the Add button at the top
-    top: 0,
+    bottom: 30,
     left: 0,
-    right: 0,
+    right: 10,
     zIndex: 1, // Ensure the button appears above the FlatList
   },
   addIcon: {
     justifyContent: "center",
     alignItems: "center",
-    width: 40,
-    height: 40,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     marginLeft: 20,
-    borderRadius: 20,
     overflow: "hidden",
   },
   addText: { fontSize: 16 },
   contactsContainer: {
-    marginTop: 60,
+    // marginTop: 80,
   },
 });
 
