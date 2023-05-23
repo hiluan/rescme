@@ -7,77 +7,9 @@ import {
   TextInput,
   StyleSheet,
   TouchableWithoutFeedback,
-  Keyboard,
 } from "react-native";
 import { ThemeContext } from "../context";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-const DialPad = ({ theme, onNumberPress, onDeletePress }) => {
-  const dialPadIconText = {
-    fontSize: 48,
-    color: theme.gray[750],
-  };
-
-  const dialPad = [
-    ["1", "2", "3"],
-    ["4", "5", "6"],
-    ["7", "8", "9"],
-    [
-      <KeyboardOff dialPadIconText={dialPadIconText} />,
-      "0",
-      <Backspace
-        onDeletePress={onDeletePress}
-        dialPadIconText={dialPadIconText}
-      />,
-    ],
-  ];
-
-  return (
-    <View style={styles.dialPadContainer}>
-      {dialPad.map((row, rowIndex) => (
-        <View key={rowIndex} style={styles.dialPadRow}>
-          {row.map((number, i) => (
-            <TouchableOpacity
-              key={i}
-              style={
-                typeof number === "string"
-                  ? [
-                      styles.dialPadButton,
-                      { backgroundColor: theme.background[750] },
-                    ]
-                  : styles.dialPadButtonIcon
-              }
-              onPress={() => onNumberPress(number)}
-            >
-              <Text style={styles.dialPadButtonText}>{number}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      ))}
-    </View>
-  );
-};
-
-const KeyboardOff = ({ dialPadIconText }) => {
-  return (
-    <TouchableOpacity
-      style={styles.dialPadIcon}
-      onPress={() => Keyboard.dismiss()}
-    >
-      {/* <Text style={dialPadIconText}>⌨</Text> */}
-      <MaterialCommunityIcons name="keyboard-off" style={dialPadIconText} />
-    </TouchableOpacity>
-  );
-};
-
-const Backspace = ({ dialPadIconText, onDeletePress }) => {
-  return (
-    <TouchableOpacity style={styles.dialPadIcon} onPress={onDeletePress}>
-      {/* <Text style={dialPadIconText}>⌨</Text> */}
-      <MaterialCommunityIcons name="backspace" style={dialPadIconText} />
-    </TouchableOpacity>
-  );
-};
+import { countryCodes, DialPad } from "../components/Contacts";
 
 const ContactAddScreen = () => {
   const { theme } = useContext(ThemeContext);
@@ -140,13 +72,6 @@ const ContactAddScreen = () => {
     //     setDropdownOpen(false);
   };
 
-  const options = [
-    { label: "🇺🇸 +1", value: "+1" },
-    { label: "🇩🇪 +49", value: "+49" },
-    { label: "🇫🇷 +33", value: "+33" },
-    // Add more options here
-  ];
-
   const closeDropdown = () => {
     setDropdownOpen(false);
   };
@@ -174,7 +99,7 @@ const ContactAddScreen = () => {
           <TouchableOpacity
             style={[
               styles.dropdownButton,
-              { backgroundColor: theme.redAccent[500] },
+              { backgroundColor: theme.background[500] },
             ]}
             onPress={handleDropdownPress}
           >
@@ -187,7 +112,7 @@ const ContactAddScreen = () => {
               style={styles.dropdownOptions}
               onStartShouldSetResponder={() => true}
             >
-              {options.map((option) => (
+              {countryCodes.map((option) => (
                 <TouchableOpacity
                   key={option.value}
                   style={[
@@ -313,49 +238,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 80,
     fontSize: 32,
-  },
-  dialPadIcon: {
-    padding: 10,
-    marginLeft: 10,
-    borderRadius: 10,
-    // backgroundColor: "gray",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  dialPadContainer: {
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 20,
-  },
-  dialPadRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 10,
-  },
-  dialPadButton: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: 10,
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    // backgroundColor: "gray",
-  },
-  dialPadButtonIcon: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: 5,
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    // backgroundColor: "gray",
-  },
-  dialPadButtonText: {
-    fontSize: 32,
-    color: "white",
   },
 });
 

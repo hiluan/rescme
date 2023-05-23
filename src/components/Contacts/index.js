@@ -1,7 +1,9 @@
 import ContactItem from "./ContactItem";
 import ContactOnline from "./ContactOnline";
+import DialPad from "./DialPad";
+import countryCodes from "./countryCodes";
 
-export { ContactItem, ContactOnline };
+export { ContactItem, ContactOnline, DialPad, countryCodes };
 
 export const contacts = [
   {
