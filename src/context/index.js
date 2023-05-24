@@ -1,11 +1,15 @@
-import { ThemeContext, ThemeProvider } from "./ThemeContext";
+import { LocationContext, LocationProvider } from "./LocationContext";
 import { AlertContext, AlertProvider } from "./AlertContext";
-export { ThemeContext, AlertContext };
+import { ThemeContext, ThemeProvider } from "./ThemeContext";
+
+export { LocationContext, AlertContext, ThemeContext };
 
 export function Providers({ children }) {
   return (
-    <AlertProvider>
-      <ThemeProvider>{children}</ThemeProvider>
-    </AlertProvider>
+    <LocationProvider>
+      <AlertProvider>
+        <ThemeProvider>{children}</ThemeProvider>
+      </AlertProvider>
+    </LocationProvider>
   );
 }

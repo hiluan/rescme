@@ -7,12 +7,17 @@ import {
   Easing,
   PanResponder,
   Dimensions,
+  Vibration,
 } from "react-native";
+import { AlertContext, LocationContext, ThemeContext } from "../context";
 import { useState, useEffect, useRef, useContext } from "react";
-import { AlertContext, ThemeContext } from "../context";
+import MapView, { Callout, Marker } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
+import * as Location from "expo-location";
+import * as Haptics from "expo-haptics";
+import { Entypo, FontAwesome } from "@expo/vector-icons";
 
-const StatusScreen = () => {
+const Status = () => {
   const { theme } = useContext(ThemeContext);
   const { isAlerted, setIsAlerted } = useContext(AlertContext);
   const opacityAnimation = useRef(new Animated.Value(1)).current;
@@ -20,16 +25,17 @@ const StatusScreen = () => {
   const navigation = useNavigation();
   const position = useState(new Animated.Value(0))[0];
 
-  const animateButton = () => {
+  const scaleAnimationBtn = () => {
+    Haptics.selectionAsync();
     Animated.sequence([
       Animated.timing(scaleAnimation, {
-        toValue: 1.3,
+        toValue: 1.2,
         duration: 200,
         useNativeDriver: true,
         easing: Easing.ease,
       }),
       Animated.timing(scaleAnimation, {
-        toValue: 0.9,
+        toValue: 0.6,
         duration: 100,
         useNativeDriver: true,
         easing: Easing.ease,
@@ -42,8 +48,9 @@ const StatusScreen = () => {
         easing: Easing.ease,
       }),
     ]).start(() => {
+      Vibration.vibrate();
       setIsAlerted(true);
-      isAlerted ? null : navigation.navigate("Chats");
+      // isAlerted ? null : navigation.navigate("Chats");
       // navigation.navigate("Group Info", { id: chatroomID })
     });
   };
@@ -75,7 +82,8 @@ const StatusScreen = () => {
   //   }).start();
   // };
 
-  ///////////////////////////
+  //////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////
   // swipe up to mark safe
 
   const handleSwipeUp = () => {
@@ -84,13 +92,14 @@ const StatusScreen = () => {
       duration: 0,
       useNativeDriver: true,
     }).start(() => {
+      Haptics.selectionAsync();
       setIsAlerted(false);
     });
   };
 
   // height of the device's screen
   const screenHeight = Dimensions.get("screen").height;
-  const swipeThreshold = screenHeight * 0.27; // Adjust the percentage as needed
+  const swipeThreshold = screenHeight * 0.36; // Adjust the percentage as needed
 
   const panResponder = useRef(
     PanResponder.create({
@@ -124,60 +133,125 @@ const StatusScreen = () => {
   const animatedSwipeUpStyles = {
     transform: [{ translateY: position }],
     opacity: position.interpolate({
-      inputRange: [-swipeThreshold, 0],
+      inputRange: [-swipeThreshold, -50],
       outputRange: [0, 1],
       extrapolate: "clamp",
     }),
   };
 
-  const backgroundColorStyle = {
+  const backgroundColorMainBtn = {
     backgroundColor: !isAlerted ? theme.redAccent[500] : theme.background[950],
   };
-  const colorStyle = {
-    color: isAlerted ? theme.redAccent[500] : theme.gray[950],
+  const colorMainBtn = {
+    color: isAlerted ? theme.greenAccent[500] : "white",
   };
+
+  //////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////// map
+
+  /// show current location
+  const { currentLocation, setCurrentLocation } = useContext(LocationContext);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.warn("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+    })();
+  }, []);
+
+  // Update the map view when currentLocation changes
+  useEffect(() => {
+    if (currentLocation.latitude && currentLocation.longitude) {
+      // Update the map view region with the currentLocation
+      mapViewRef.current.animateToRegion({
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude,
+        latitudeDelta: 0.015,
+        longitudeDelta: 0.015,
+      });
+    }
+  }, [currentLocation]);
+
+  const mapViewRef = useRef(null); // Reference to the MapView component
+
   return (
     <View
-      style={[
-        styles.container,
-        {
-          backgroundColor: isAlerted
-            ? theme.redAccent[500]
-            : theme.background[950],
-        },
-      ]}
+      style={[styles.container, { backgroundColor: theme.background[1000] }]}
     >
+      <MapView
+        ref={mapViewRef}
+        style={styles.map}
+        initialRegion={{
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+        showsUserLocation={true}
+      >
+        <Marker coordinate={currentLocation} draggable={true}>
+          <Callout>
+            <Text>Drag to your current location.</Text>
+          </Callout>
+        </Marker>
+      </MapView>
+
       {!isAlerted ? (
-        <Pressable onPress={animateButton} style={styles.button}>
+        <Pressable onPress={scaleAnimationBtn} style={styles.mainBtnContainer}>
+          <View
+            style={[backgroundColorMainBtn, styles.mainBtnInnerLayer]}
+          ></View>
+
           <Animated.View
             style={[
-              styles.buttonInner,
-              backgroundColorStyle,
+              styles.mainBtn,
+              styles.mainBtnSOS,
+              backgroundColorMainBtn,
               {
                 opacity: opacityAnimation,
                 transform: [{ scale: scaleAnimation }],
               },
             ]}
           >
-            <Text style={[styles.buttonText, colorStyle]}>I Need Help!</Text>
+            <Text style={[styles.mainBtnText, colorMainBtn]}>Send SOS!</Text>
           </Animated.View>
         </Pressable>
       ) : (
-        <Animated.View
-          {...panResponder.panHandlers}
-          style={[
-            styles.buttonInner,
-            backgroundColorStyle,
-            animatedSwipeUpStyles,
-            // {
-            //   opacity: opacityAnimation,
-            // },
-          ]}
-        >
-          <Text style={[styles.buttonText, colorStyle]}>I'm Safe.</Text>
-        </Animated.View>
+        <View style={styles.mainBtnContainer}>
+          <Animated.View
+            {...panResponder.panHandlers}
+            style={[
+              styles.mainBtn,
+              styles.mainBtnSafe,
+              backgroundColorMainBtn,
+              animatedSwipeUpStyles,
+              {
+                borderColor: theme.greenAccent[500],
+              },
+            ]}
+          >
+            <FontAwesome
+              name="angle-double-up"
+              size={96}
+              style={[colorMainBtn, styles.slideUpIcon]}
+            />
+
+            <Text style={[colorMainBtn, styles.mainBtnText]}>Confirm</Text>
+            <Text style={[colorMainBtn, styles.mainBtnText, { marginTop: -5 }]}>
+              Safe
+            </Text>
+            <Text style={[colorMainBtn, styles.slideUpText]}>Slide Up</Text>
+          </Animated.View>
+        </View>
       )}
-      <Text
+      {/* <Text
         style={[
           styles.subtitle,
           { color: !isAlerted ? theme.redAccent[500] : theme.background[950] },
@@ -186,12 +260,12 @@ const StatusScreen = () => {
         {isAlerted
           ? "Swipe the button up to inform you're safe."
           : "Press the button to inform you need help ASAP."}
-      </Text>
+      </Text> */}
     </View>
   );
 };
 
-export default StatusScreen;
+export default Status;
 
 const styles = StyleSheet.create({
   container: {
@@ -199,21 +273,65 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  button: {
-    backgroundColor: "transparent",
-    borderRadius: 100,
+  map: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    borderRadius: 20,
+  },
+  mainBtnContainer: {
+    width: 180,
+    height: 180,
+    marginTop: 360,
+    // backgroundColor: "white",
+    borderRadius: 90,
+  },
+  mainBtn: {
+    width: 180,
+    height: 180,
+    borderRadius: 90,
     justifyContent: "center",
     alignItems: "center",
+    // marginTop: 360,
   },
-  buttonInner: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    justifyContent: "center",
-    alignItems: "center",
+  mainBtnSOS: {
+    shadowColor: "red",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.7,
+    shadowRadius: 20,
+    elevation: Platform.OS === "android" ? 5 : undefined, // Add elevation for Android
   },
-  buttonText: {
+  mainBtnSafe: {
+    // opacity: opacityAnimation,
+    borderWidth: 8,
+    shadowColor: "white",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: Platform.OS === "android" ? 5 : undefined, // Add elevation for Android
+  },
+  mainBtnText: {
     fontSize: 30,
+  },
+  mainBtnInnerLayer: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+    marginTop: 360,
+    opacity: 0.5,
+  },
+  slideUpText: {
+    position: "absolute",
+    bottom: 20,
+    fontSize: 14,
+  },
+  slideUpIcon: {
+    position: "absolute",
+    top: -20,
+    transform: [{ scaleX: 1 }, { scaleY: 0.5 }],
   },
   subtitle: {
     fontSize: 13,

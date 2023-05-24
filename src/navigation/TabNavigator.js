@@ -38,6 +38,7 @@ const TabNavigator = () => {
     <Tab.Navigator
       initialRouteName="Status"
       screenOptions={({ route }) => ({
+        headerShown: route.name !== "Status", // Hide header for "Status" route
         headerStyle: {
           backgroundColor: getHeaderBackgroundColor(route.name),
           borderBottomWidth: 0,
@@ -60,7 +61,7 @@ const TabNavigator = () => {
         options={{ tabBarIcon: icon("alert-circle") }}
       />
       <Tab.Screen
-        name="Chats"
+        name="Messages"
         component={ChatsScreen}
         options={{
           tabBarIcon: icon("chatbubbles"),
