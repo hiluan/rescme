@@ -208,7 +208,6 @@ const Status = () => {
           <View
             style={[backgroundColorMainBtn, styles.mainBtnInnerLayer]}
           ></View>
-
           <Animated.View
             style={[
               styles.mainBtn,
@@ -320,7 +319,6 @@ const styles = StyleSheet.create({
     width: 160,
     height: 160,
     borderRadius: 80,
-    marginTop: 360,
     opacity: 0.5,
   },
   slideUpText: {
