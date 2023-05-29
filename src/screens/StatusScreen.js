@@ -7,6 +7,7 @@ import {
   Easing,
   PanResponder,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { AlertContext, LocationContext, ThemeContext } from "../context";
 import { useState, useEffect, useRef, useContext } from "react";
@@ -187,23 +188,27 @@ const Status = () => {
       style={[styles.container, { backgroundColor: theme.background[1000] }]}
     >
       <View style={styles.mapContainer}>
-        <MapView
-          ref={mapViewRef}
-          style={styles.map}
-          initialRegion={{
-            latitude: 0,
-            longitude: 0,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-          // showsUserLocation={true}
-        >
-          <Marker coordinate={currentLocation} draggable={true}>
-            <Callout>
-              <Text>Drag to your current location.</Text>
-            </Callout>
-          </Marker>
-        </MapView>
+        {currentLocation.latitude && currentLocation.longitude ? (
+          <MapView
+            ref={mapViewRef}
+            style={styles.map}
+            showsUserLocation={true}
+            initialRegion={{
+              latitude: currentLocation.latitude,
+              longitude: currentLocation.longitude,
+              latitudeDelta: 0.015,
+              longitudeDelta: 0.015,
+            }}
+          >
+            <Marker coordinate={currentLocation} draggable={true}>
+              <Callout>
+                <Text>Drag to your desired location.</Text>
+              </Callout>
+            </Marker>
+          </MapView>
+        ) : (
+          <ActivityIndicator size="large" color={theme.gray[0]} />
+        )}
       </View>
       {!isAlerted ? (
         <Pressable onPress={scaleAnimationBtn} style={styles.mainBtnContainer}>
@@ -282,6 +287,8 @@ const styles = StyleSheet.create({
     top: 0,
     borderRadius: 20,
     overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
   },
   map: {
     width: "100%",
