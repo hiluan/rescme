@@ -10,6 +10,7 @@ import { useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { MeContext } from "../../context";
+import { mapStyle } from "../../utils";
 dayjs.extend(relativeTime);
 
 const AMessage = ({
@@ -50,19 +51,23 @@ const AMessage = ({
     <View style={stylesContainer}>
       {hasLocation ? (
         <TouchableOpacity onPress={openLocation} activeOpacity={0.7}>
-          <View style={styles.mapContainer}>
-            <MapView
-              style={styles.map}
-              scrollEnabled={false}
-              initialRegion={{
-                latitude: message.location.latitude,
-                longitude: message.location.longitude,
-                latitudeDelta: 0.008,
-                longitudeDelta: 0.008,
-              }}
-            >
-              <Marker coordinate={message.location} />
-            </MapView>
+          <View style={styles.mapMsgContainer}>
+            <View style={styles.mapContainer}>
+              <MapView
+                style={styles.map}
+                customMapStyle={mapStyle}
+                scrollEnabled={false}
+                initialRegion={{
+                  latitude: message.location.latitude,
+                  longitude: message.location.longitude,
+                  latitudeDelta: 0.008,
+                  longitudeDelta: 0.008,
+                }}
+              >
+                <Marker coordinate={message.location} />
+              </MapView>
+            </View>
+
             <Text style={[styles.coordinates, textColor]}>
               Latitude: {message.location.latitude.toFixed(6)}
             </Text>
@@ -82,14 +87,18 @@ const AMessage = ({
 };
 
 const styles = StyleSheet.create({
-  mapContainer: {
+  mapMsgContainer: {
     alignItems: "center",
+  },
+  mapContainer: {
+    height: 150,
+    marginBottom: 10,
+    borderRadius: 5,
+    overflow: "hidden",
   },
   map: {
     width: 200,
-    height: 150,
-    borderRadius: 5,
-    marginBottom: 10,
+    height: 180,
   },
   coordinates: {
     marginBottom: 5,
