@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 import React from "react";
 
-const ContactItem = ({ user, theme, onPress = () => {} }) => {
+const AContact = ({ user, theme, onPress = () => {} }) => {
   const navigation = useNavigation();
 
   return (
@@ -53,4 +53,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ContactItem;
+export default AContact;

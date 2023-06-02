@@ -35,9 +35,9 @@ const Navigator = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen name="Status" component={StatusScreen} />
-        <Stack.Screen name="Chat" component={ChatScreen} />
         <Stack.Screen name="Add Contact" component={ContactAddScreen} />
         <Stack.Screen name="Contact" component={ContactScreen} />
+        <Stack.Screen name="Situation" component={ChatScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

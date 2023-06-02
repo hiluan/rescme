@@ -17,6 +17,7 @@ import {
 // import InputBox from "../components/InputBox";
 // import Message from "../components/Message";
 // import bg from "../../assets/images/BG.png";
+import messages from "../../assets/data/messages.json";
 
 const ChatScreen = () => {
   // const [chatRoom, setChatRoom] = useState(null);

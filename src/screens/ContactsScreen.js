@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
-import { ContactItem, contacts } from "../components/Contacts";
+import { AContact, contacts } from "../components/Contacts";
 import { useNavigation } from "@react-navigation/core";
 import { ThemeContext } from "../context";
 import { useContext } from "react";
@@ -8,7 +8,7 @@ import { Ionicons } from "@expo/vector-icons";
 const ContactsScreen = () => {
   const navigation = useNavigation();
   const { theme } = useContext(ThemeContext);
-  const background950 = { backgroundColor: theme.background[950] };
+  const background950 = { backgroundColor: theme.background[1000] };
 
   return (
     <View style={[styles.container, background950]}>
@@ -35,7 +35,7 @@ const ContactsScreen = () => {
         style={styles.contactsContainer}
         data={contacts.sort((a, b) => a.name.localeCompare(b.name))}
         renderItem={({ item }) => (
-          <ContactItem
+          <AContact
             user={item}
             theme={theme}
             onPress={() => navigation.navigate("Contact", { id: item.phone })}
@@ -47,7 +47,7 @@ const ContactsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { flex: 1, width: "100%" },
   addButton: {
     flexDirection: "row",
     justifyContent: "flex-end",

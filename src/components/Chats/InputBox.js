@@ -9,117 +9,120 @@
 // import "react-native-get-random-values";
 // import { v4 as uuidv4 } from "uuid";
 
-// const InputBox = ({ chatroomID, chatRoom }) => {
-//   const [newText, setNewText] = useState("");
-//   const [imageURI, setImageURI] = useState(null);
+import { View } from "react-native";
 
-//   const onSend = async () => {
-//     const authUser = await Auth.currentAuthenticatedUser();
-//     const newMessage = {
-//       chatroomID,
-//       text: newText,
-//       userID: authUser.attributes.sub,
-//     };
+const InputBox = ({ chatroomID, chatRoom }) => {
+  //   const [newText, setNewText] = useState("");
+  //   const [imageURI, setImageURI] = useState(null);
 
-//     // attach image to message:
-//     if (imageURI) {
-//       newMessage.images = [await uploadFile(imageURI)];
-//       setImageURI(null);
-//     }
+  //   const onSend = async () => {
+  //     const authUser = await Auth.currentAuthenticatedUser();
+  //     const newMessage = {
+  //       chatroomID,
+  //       text: newText,
+  //       userID: authUser.attributes.sub,
+  //     };
 
-//     const newMessageData = await API.graphql(
-//       graphqlOperation(createMessage, {
-//         input: newMessage,
-//       })
-//     );
+  //     // attach image to message:
+  //     if (imageURI) {
+  //       newMessage.images = [await uploadFile(imageURI)];
+  //       setImageURI(null);
+  //     }
 
-//     setNewText("");
-//     // set the new message as LastMessage of the ChatRoom
+  //     const newMessageData = await API.graphql(
+  //       graphqlOperation(createMessage, {
+  //         input: newMessage,
+  //       })
+  //     );
 
-//     await API.graphql(
-//       graphqlOperation(updateChatRoom, {
-//         input: {
-//           _version: chatRoom._version,
-//           chatRoomLastMessageId: newMessageData.data.createMessage.id,
-//           id: chatroomID,
-//         },
-//       })
-//     );
-//   };
+  //     setNewText("");
+  //     // set the new message as LastMessage of the ChatRoom
 
-//   const pickImage = async () => {
-//     // No permissions request is necessary for launching the image library
-//     let result = await ImagePicker.launchImageLibraryAsync({
-//       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-//       quality: 1,
-//     });
+  //     await API.graphql(
+  //       graphqlOperation(updateChatRoom, {
+  //         input: {
+  //           _version: chatRoom._version,
+  //           chatRoomLastMessageId: newMessageData.data.createMessage.id,
+  //           id: chatroomID,
+  //         },
+  //       })
+  //     );
+  //   };
 
-//     // console.log(result.assets[0].uri);
+  //   const pickImage = async () => {
+  //     // No permissions request is necessary for launching the image library
+  //     let result = await ImagePicker.launchImageLibraryAsync({
+  //       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //       quality: 1,
+  //     });
 
-//     if (!result.canceled) {
-//       setImageURI(result.assets[0].uri);
-//     }
-//   };
+  //     // console.log(result.assets[0].uri);
 
-//   const uploadFile = async (fileUri) => {
-//     try {
-//       const response = await fetch(fileUri);
-//       const blob = await response.blob();
-//       const key = `${uuidv4()}.png`;
-//       await Storage.put(key, blob, {
-//         contentType: "image/png", // contentType is optional
-//       });
-//       return key;
-//     } catch (err) {
-//       console.log("Error uploading file:", err);
-//     }
-//   };
+  //     if (!result.canceled) {
+  //       setImageURI(result.assets[0].uri);
+  //     }
+  //   };
 
-//   return (
-//     <>
-//       {imageURI && (
-//         <View style={styles.attachmentsContainer}>
-//           <Image
-//             source={{ uri: imageURI }}
-//             style={styles.selectedImage}
-//             resizeMode="contain"
-//           />
+  //   const uploadFile = async (fileUri) => {
+  //     try {
+  //       const response = await fetch(fileUri);
+  //       const blob = await response.blob();
+  //       const key = `${uuidv4()}.png`;
+  //       await Storage.put(key, blob, {
+  //         contentType: "image/png", // contentType is optional
+  //       });
+  //       return key;
+  //     } catch (err) {
+  //       console.log("Error uploading file:", err);
+  //     }
+  //   };
 
-//           <MaterialIcons
-//             name="highlight-remove"
-//             onPress={() => setImageURI(null)}
-//             size={20}
-//             color="gray"
-//             style={styles.removeSelectedImage}
-//           />
-//         </View>
-//       )}
+  return (
+    <View></View>
+    // <>
+    //       {imageURI && (
+    //         <View style={styles.attachmentsContainer}>
+    //           <Image
+    //             source={{ uri: imageURI }}
+    //             style={styles.selectedImage}
+    //             resizeMode="contain"
+    //           />
 
-//       <SafeAreaView edges={["bottom"]} style={styles.container}>
-//         {/* icons.expo.fyi */}
-//         <AntDesign
-//           onPress={pickImage}
-//           name="plus"
-//           size={24}
-//           color="royalblue"
-//         />
-//         <TextInput
-//           value={newText}
-//           onChangeText={setNewText}
-//           placeholder="type your message..."
-//           style={styles.input}
-//         />
-//         <MaterialIcons
-//           onPress={onSend}
-//           name="send"
-//           size={20}
-//           color="white"
-//           style={styles.send}
-//         />
-//       </SafeAreaView>
-//     </>
-//   );
-// };
+    //           <MaterialIcons
+    //             name="highlight-remove"
+    //             onPress={() => setImageURI(null)}
+    //             size={20}
+    //             color="gray"
+    //             style={styles.removeSelectedImage}
+    //           />
+    //         </View>
+    //       )}
+
+    //       <SafeAreaView edges={["bottom"]} style={styles.container}>
+    //         {/* icons.expo.fyi */}
+    //         <AntDesign
+    //           onPress={pickImage}
+    //           name="plus"
+    //           size={24}
+    //           color="royalblue"
+    //         />
+    //         <TextInput
+    //           value={newText}
+    //           onChangeText={setNewText}
+    //           placeholder="type your message..."
+    //           style={styles.input}
+    //         />
+    //         <MaterialIcons
+    //           onPress={onSend}
+    //           name="send"
+    //           size={20}
+    //           color="white"
+    //           style={styles.send}
+    //         />
+    //       </SafeAreaView>
+    // </>
+  );
+};
 
 // const styles = StyleSheet.create({
 //   container: {
@@ -161,4 +164,4 @@
 //     overflow: "hidden",
 //   },
 // });
-// export default InputBox;
+export default InputBox;

@@ -1,17 +1,21 @@
-import { AlertContext, ThemeContext } from "../context";
+import { AlertContext, ShowHistoryContext, ThemeContext } from "../context";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useContext } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import ContactsScreen from "../screens/ContactsScreen";
 import SettingScreen from "../screens/SettingScreen";
 import StatusScreen from "../screens/StatusScreen";
 import ChatsScreen from "../screens/ChatsScreen";
+import { View } from "react-native";
+import { Text } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
   const { theme } = useContext(ThemeContext);
   const { isAlerted } = useContext(AlertContext);
+  const { showHistory, setShowHistory } = useContext(ShowHistoryContext);
+
   const tabBarActiveTintColor = theme.gray[0];
   const tabBarInactiveTintColor = theme.gray[600];
 
@@ -63,9 +67,26 @@ const TabNavigator = () => {
       <Tab.Screen
         name="Messages"
         component={ChatsScreen}
-        options={{
+        options={({ navigation }) => ({
           tabBarIcon: icon("chatbubbles"),
-        }}
+          headerRight: () => (
+            <MaterialCommunityIcons
+              onPress={
+                () => setShowHistory(!showHistory)
+                // navigation.navigate("Archived Situations")
+              }
+              name={showHistory ? "archive-clock" : "archive-clock-outline"}
+              size={24}
+              color={theme.gray[500]}
+              style={{
+                marginRight: 15,
+              }}
+            />
+          ),
+        })}
+        // options={{
+        //   tabBarIcon: icon("chatbubbles"),
+        // }}
       />
       <Tab.Screen
         name="Contacts"
