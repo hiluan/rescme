@@ -69,20 +69,20 @@ const TabNavigator = () => {
         component={ChatsScreen}
         options={({ navigation }) => ({
           tabBarIcon: icon("chatbubbles"),
-          headerRight: () => (
-            <MaterialCommunityIcons
-              onPress={
-                () => setShowHistory(!showHistory)
-                // navigation.navigate("Archived Situations")
-              }
-              name={showHistory ? "archive-clock" : "archive-clock-outline"}
-              size={24}
-              color={theme.gray[500]}
-              style={{
-                marginRight: 15,
-              }}
-            />
-          ),
+          // headerRight: () => (
+          //   <MaterialCommunityIcons
+          //     onPress={
+          //       () => setShowHistory(!showHistory)
+          //       // navigation.navigate("Archived Situations")
+          //     }
+          //     name={showHistory ? "archive-clock" : "archive-clock-outline"}
+          //     size={24}
+          //     color={theme.gray[500]}
+          //     style={{
+          //       marginRight: 15,
+          //     }}
+          //   />
+          // ),
         })}
         // options={{
         //   tabBarIcon: icon("chatbubbles"),

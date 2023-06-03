@@ -1,4 +1,4 @@
-// using DIAL PAD
+// using KEYBOARD
 import React, { useState, useContext, useRef, useEffect } from "react";
 import {
   View,
@@ -7,14 +7,15 @@ import {
   TextInput,
   StyleSheet,
   TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { ThemeContext } from "../context";
-import { countryCodes, DialPad } from "../components/Contacts";
 
 const ContactAddScreen = () => {
   const { theme } = useContext(ThemeContext);
   const background950 = { backgroundColor: theme.background[950] };
   const [number, setNumber] = useState("");
+  const [numberOnly, setNumberOnly] = useState("");
   const [name, setName] = useState("");
   const [existingUser, setExistingUser] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false); // State to toggle the dropdown
@@ -23,11 +24,14 @@ const ContactAddScreen = () => {
   useEffect(() => {
     const showNumber = (num) => {
       const numberOnly = num.replace(/[^0-9]/g, "");
-
       //TODO: when numberOnly.length === 10 => automatically search for the user in the DB without having to press search
       // if the user is not in the db => send invitation
       // if the user is in the db => button 'add user' appears
 
+      if (numberOnly.length === 10) {
+        console.log("Loading user...");
+        return;
+      }
       let formattedNumber = "";
 
       // if numberWithoutAlphabets.length === 3 => add () => (304)
@@ -63,7 +67,7 @@ const ContactAddScreen = () => {
       "($1) $2-$3"
     );
     console.log("| --------- formattedNumber:", formattedNumber);
-
+    console.log("| --------- name:", name);
     if (numberWithoutAlphabets.length !== 10)
       return console.warn("Please enter a valid phone number.");
 
@@ -82,8 +86,7 @@ const ContactAddScreen = () => {
 
   const handleNumberPress = (digit) => {
     const numberOnly = number.replace(/[^0-9]/g, "");
-
-    if (numberOnly.length < 10) {
+    if (numberOnly.length <= 10) {
       setNumber((prevNumber) => prevNumber.replace(/[^0-9]/g, "") + digit);
     }
   };
@@ -92,10 +95,26 @@ const ContactAddScreen = () => {
     setNumber((prevNumber) => prevNumber.slice(0, prevNumber.length - 1));
   };
 
+  const stylesInputText = {
+    color: theme.gray[0],
+    borderColor: theme.background[500],
+    flex: 1,
+    height: 50,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    paddingLeft: 80,
+    fontSize: 18,
+  };
+
   return (
     <TouchableWithoutFeedback onPress={closeDropdown}>
       <View style={[styles.container, background950]}>
-        <View style={styles.inputContainer}>
+        <View style={{ height: 50 }}></View>
+        <View
+          style={[
+            styles.inputContainer,
+            { backgroundColor: theme.background[900] },
+          ]}
+        >
           <TouchableOpacity
             style={[
               styles.dropdownButton,
@@ -105,14 +124,13 @@ const ContactAddScreen = () => {
           >
             <Text style={{ color: "white", fontSize: 18 }}>🇺🇸 +1</Text>
           </TouchableOpacity>
-
           {dropdownOpen && (
             <View
               ref={dropdownRef}
               style={styles.dropdownOptions}
               onStartShouldSetResponder={() => true}
             >
-              {countryCodes.map((option) => (
+              {options.map((option) => (
                 <TouchableOpacity
                   key={option.value}
                   style={[
@@ -126,48 +144,47 @@ const ContactAddScreen = () => {
               ))}
             </View>
           )}
-
-          <View style={styles.inputTextContainer}>
-            {number.length ? (
-              <TextInput
-                //   placeholder="Enter Phone Number"
-                //   placeholderTextColor={theme.gray[600]}
-                value={number}
-                onChangeText={setNumber}
-                style={[
-                  styles.inputText,
-                  {
-                    color: theme.gray[100],
-                  },
-                ]}
-              />
-            ) : (
-              <Text
-                style={[
-                  styles.inputText,
-                  {
-                    color: theme.gray[750],
-                    fontSize: 16,
-                  },
-                ]}
-              >
-                Enter a Phone Number
-              </Text>
-            )}
-          </View>
+          <TextInput
+            placeholder="Enter Contact's Phone Number"
+            keyboardType="phone-pad"
+            placeholderTextColor={theme.gray[600]}
+            value={number}
+            onChangeText={(text) => {
+              // let user input only 10 digits (for USA)
+              const numberOnly = text.replace(/[^0-9]/g, "");
+              if (numberOnly.length === 11) {
+                return;
+              }
+              setNumber(text);
+            }}
+            style={[
+              stylesInputText,
+              { borderTopWidth: StyleSheet.hairlineWidth },
+            ]}
+          />
         </View>
 
-        <DialPad
-          theme={theme}
-          onNumberPress={handleNumberPress}
-          onDeletePress={handleDeletePress}
-        />
-
+        {/* // TODO: if user found then show the below: */}
+        <View
+          style={[
+            styles.inputContainer,
+            { backgroundColor: theme.background[900] },
+          ]}
+        >
+          <Text style={[styles.title, { color: theme.gray[300] }]}>Name</Text>
+          <TextInput
+            placeholder="Enter Contact's Name"
+            placeholderTextColor={theme.gray[600]}
+            value={name}
+            onChangeText={setName}
+            style={stylesInputText}
+          />
+        </View>
         <TouchableOpacity
           style={[styles.button, { backgroundColor: theme.redAccent[500] }]}
           onPress={() => handleSearchUser(number)}
         >
-          <Text style={{ color: "white", fontSize: 18 }}>Search User</Text>
+          <Text style={{ color: "white", fontSize: 18 }}>Save</Text>
         </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
@@ -180,6 +197,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+
   button: {
     borderRadius: 10,
     height: 50,
@@ -193,13 +211,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "center",
-    width: "90%",
-    marginVertical: 20,
+    // width: "90%",
+    // marginTop: 50,
   },
+
   dropdownButton: {
     position: "absolute",
     borderRadius: 10,
     left: 10,
+    // borderBottomLeftRadius: 10,
+    // borderTopLeftRadius: 10,
     height: 30,
     width: 60,
     alignSelf: "center",
@@ -227,22 +248,16 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 5,
   },
-  inputTextContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    height: 50,
-  },
-  inputText: {
-    flex: 1,
-    paddingLeft: 80,
-    fontSize: 32,
+  title: {
+    position: "absolute",
+    left: 10,
+    fontSize: 18,
+    marginRight: 10,
   },
 });
 
-// using KEYBOARD
-// import React, { useState, useContext, useRef } from "react";
+// // using DIAL PAD
+// import React, { useState, useContext, useRef, useEffect } from "react";
 // import {
 //   View,
 //   Text,
@@ -250,31 +265,70 @@ const styles = StyleSheet.create({
 //   TextInput,
 //   StyleSheet,
 //   TouchableWithoutFeedback,
-//   Keyboard,
 // } from "react-native";
 // import { ThemeContext } from "../context";
+// import { countryCodes, DialPad } from "../components/Contacts";
 
 // const ContactAddScreen = () => {
 //   const { theme } = useContext(ThemeContext);
 //   const background950 = { backgroundColor: theme.background[950] };
-
-//   const [name, setName] = useState("");
 //   const [number, setNumber] = useState("");
+//   const [name, setName] = useState("");
 //   const [existingUser, setExistingUser] = useState(false);
 //   const [dropdownOpen, setDropdownOpen] = useState(false); // State to toggle the dropdown
 //   const dropdownRef = useRef(null); // Reference to the dropdown view
 
-//   const handleSearchUser = (selectedOption) => {
-//     setNumber(selectedOption);
-//     setDropdownOpen(false);
-//   };
+//   useEffect(() => {
+//     const showNumber = (num) => {
+//       const numberOnly = num.replace(/[^0-9]/g, "");
 
-//   const options = [
-//     { label: "🇺🇸 +1", value: "+1" },
-//     { label: "🇩🇪 +49", value: "+49" },
-//     { label: "🇫🇷 +33", value: "+33" },
-//     // Add more options here
-//   ];
+//       //TODO: when numberOnly.length === 10 => automatically search for the user in the DB without having to press search
+//       // if the user is not in the db => send invitation
+//       // if the user is in the db => button 'add user' appears
+
+//       let formattedNumber = "";
+
+//       // if numberWithoutAlphabets.length === 3 => add () => (304)
+//       // if numberWithoutAlphabets.length === 4 => add ' ' => (304) 444
+//       // if numberWithoutAlphabets.length === 7 => add - => (304) 444-5465
+
+//       if (numberOnly.length > 6) {
+//         formattedNumber = `(${numberOnly.slice(0, 3)}) ${numberOnly.slice(
+//           3,
+//           6
+//         )}-${numberOnly.slice(6)}`;
+//       } else if (numberOnly.length > 3) {
+//         formattedNumber = `(${numberOnly.slice(0, 3)}) ${numberOnly.slice(3)}`;
+//       } else {
+//         formattedNumber = numberOnly;
+//       }
+
+//       if (formattedNumber !== number) {
+//         setNumber(formattedNumber);
+//       }
+//     };
+
+//     showNumber(number);
+//   }, [number]);
+
+//   const handleSearchUser = (number) => {
+//     const numberWithoutAlphabets = number.replace(/[^0-9]/g, "");
+//     console.log("| --------- numberWithoutAlphabets:", numberWithoutAlphabets);
+
+//     // Format the numbers in the desired format
+//     const formattedNumber = numberWithoutAlphabets.replace(
+//       /(\d{3})(\d{3})(\d{4})/,
+//       "($1) $2-$3"
+//     );
+//     console.log("| --------- formattedNumber:", formattedNumber);
+
+//     if (numberWithoutAlphabets.length !== 10)
+//       return console.warn("Please enter a valid phone number.");
+
+//     // Update the state with the formatted number
+//     setNumber(formattedNumber);
+//     //     setDropdownOpen(false);
+//   };
 
 //   const closeDropdown = () => {
 //     setDropdownOpen(false);
@@ -284,6 +338,18 @@ const styles = StyleSheet.create({
 //     // setDropdownOpen(!dropdownOpen);
 //   };
 
+//   const handleNumberPress = (digit) => {
+//     const numberOnly = number.replace(/[^0-9]/g, "");
+
+//     if (numberOnly.length < 10) {
+//       setNumber((prevNumber) => prevNumber.replace(/[^0-9]/g, "") + digit);
+//     }
+//   };
+
+//   const handleDeletePress = () => {
+//     setNumber((prevNumber) => prevNumber.slice(0, prevNumber.length - 1));
+//   };
+
 //   return (
 //     <TouchableWithoutFeedback onPress={closeDropdown}>
 //       <View style={[styles.container, background950]}>
@@ -291,7 +357,7 @@ const styles = StyleSheet.create({
 //           <TouchableOpacity
 //             style={[
 //               styles.dropdownButton,
-//               { backgroundColor: theme.redAccent[500] },
+//               { backgroundColor: theme.background[500] },
 //             ]}
 //             onPress={handleDropdownPress}
 //           >
@@ -304,7 +370,7 @@ const styles = StyleSheet.create({
 //               style={styles.dropdownOptions}
 //               onStartShouldSetResponder={() => true}
 //             >
-//               {options.map((option) => (
+//               {countryCodes.map((option) => (
 //                 <TouchableOpacity
 //                   key={option.value}
 //                   style={[
@@ -319,17 +385,41 @@ const styles = StyleSheet.create({
 //             </View>
 //           )}
 
-//           <TextInput
-//             placeholder="Enter Phone Number"
-//             placeholderTextColor={theme.gray[600]}
-//             value={number}
-//             onChangeText={setNumber}
-//             style={[
-//               styles.inputText,
-//               { color: theme.gray[100], borderColor: theme.redAccent[500] },
-//             ]}
-//           />
+//           <View style={styles.inputTextContainer}>
+//             {number.length ? (
+//               <TextInput
+//                 //   placeholder="Enter Phone Number"
+//                 //   placeholderTextColor={theme.gray[600]}
+//                 value={number}
+//                 onChangeText={setNumber}
+//                 style={[
+//                   styles.inputText,
+//                   {
+//                     color: theme.gray[100],
+//                   },
+//                 ]}
+//               />
+//             ) : (
+//               <Text
+//                 style={[
+//                   styles.inputText,
+//                   {
+//                     color: theme.gray[750],
+//                     fontSize: 16,
+//                   },
+//                 ]}
+//               >
+//                 Enter a Phone Number
+//               </Text>
+//             )}
+//           </View>
 //         </View>
+
+//         <DialPad
+//           theme={theme}
+//           onNumberPress={handleNumberPress}
+//           onDeletePress={handleDeletePress}
+//         />
 
 //         <TouchableOpacity
 //           style={[styles.button, { backgroundColor: theme.redAccent[500] }]}
@@ -362,14 +452,12 @@ const styles = StyleSheet.create({
 //     alignItems: "center",
 //     alignSelf: "center",
 //     width: "90%",
-//     marginTop: 50,
+//     marginVertical: 20,
 //   },
 //   dropdownButton: {
 //     position: "absolute",
 //     borderRadius: 10,
 //     left: 10,
-//     // borderBottomLeftRadius: 10,
-//     // borderTopLeftRadius: 10,
 //     height: 30,
 //     width: 60,
 //     alignSelf: "center",
@@ -397,13 +485,17 @@ const styles = StyleSheet.create({
 //     marginVertical: 5,
 //     borderRadius: 5,
 //   },
+//   inputTextContainer: {
+//     flex: 1,
+//     flexDirection: "row",
+//     alignItems: "center",
+//     justifyContent: "center",
+//     height: 50,
+//   },
 //   inputText: {
 //     flex: 1,
-//     height: 50,
-//     borderWidth: 1,
-//     borderRadius: 10,
 //     paddingLeft: 80,
-//     fontSize: 18,
+//     fontSize: 32,
 //   },
 // });
 
