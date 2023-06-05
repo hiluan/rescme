@@ -30,7 +30,7 @@ const TabNavigator = () => {
     if (isAlerted && routeName === "Status") {
       return theme.redAccent[500];
     } else {
-      return theme.background[950];
+      return theme.background[1000];
     }
   };
 

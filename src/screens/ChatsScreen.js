@@ -1,36 +1,45 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { LocationContext, ThemeContext } from "../context";
 import MapView, { Callout, Marker } from "react-native-maps";
-import { StyleSheet, Text, View } from "react-native";
-import * as Location from "expo-location";
-import { LocationContext } from "../context";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ChatsScreen() {
-  // const { currentLocation, setCurrentLocation } = useContext(LocationContext);
-  // console.log(
-  //   "| ----------------------------- currentLocation:",
-  //   currentLocation.coords.latitude
-  // );
+  const { currentLocation } = useContext(LocationContext);
+  const { theme } = useContext(ThemeContext);
+  const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
-      {/* <MapView
-        style={styles.map}
-        initialRegion={{
-          latitudeDelta: 0.02,
-          longitudeDelta: 0.02,
-        }}
-        showsUserLocation={true}
+    <View
+      style={[styles.container, { backgroundColor: theme.background[1000] }]}
+    >
+      <Pressable
+        onPress={() =>
+          navigation.navigate(
+            "Chat"
+            // , { id: newChatRoom.id }
+          )
+        }
+        style={styles.mapContainer}
       >
-        <Marker
-          coordinate={currentLocation}
-          title="Test Title"
-          description="Test Description"
+        <MapView
+          style={styles.map}
+          // TODO: NOT currentLocation but SOSer's LOCATION
+          initialRegion={{
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
+            latitudeDelta: 0.008,
+            longitudeDelta: 0.008,
+          }}
+          // showsUserLocation={true}
         >
-          <Callout>
-            <Text>My current location.</Text>
-          </Callout>
-        </Marker>
-      </MapView> */}
+          <Marker coordinate={currentLocation} draggable={true}>
+            <Callout>
+              <Text>USER's location.</Text>
+            </Callout>
+          </Marker>
+        </MapView>
+      </Pressable>
     </View>
   );
 }
@@ -38,6 +47,16 @@ export default function ChatsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  mapContainer: {
+    position: "absolute",
+    width: "95%",
+    height: "30%",
+    top: 0,
+    borderRadius: 20,
+    overflow: "hidden",
   },
   map: {
     width: "100%",

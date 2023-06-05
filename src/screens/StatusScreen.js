@@ -7,15 +7,15 @@ import {
   Easing,
   PanResponder,
   Dimensions,
-  Vibration,
 } from "react-native";
 import { AlertContext, LocationContext, ThemeContext } from "../context";
 import { useState, useEffect, useRef, useContext } from "react";
 import MapView, { Callout, Marker } from "react-native-maps";
+
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import * as Haptics from "expo-haptics";
-import { Entypo, FontAwesome } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 const Status = () => {
   const { theme } = useContext(ThemeContext);
@@ -48,9 +48,8 @@ const Status = () => {
         easing: Easing.ease,
       }),
     ]).start(() => {
-      Vibration.vibrate();
       setIsAlerted(true);
-      // isAlerted ? null : navigation.navigate("Chats");
+      isAlerted ? null : navigation.navigate("Chat");
       // navigation.navigate("Group Info", { id: chatroomID })
     });
   };
@@ -140,7 +139,7 @@ const Status = () => {
   };
 
   const backgroundColorMainBtn = {
-    backgroundColor: !isAlerted ? theme.redAccent[500] : theme.background[950],
+    backgroundColor: !isAlerted ? theme.redAccent[500] : theme.background[500],
   };
   const colorMainBtn = {
     color: isAlerted ? theme.greenAccent[500] : "white",
@@ -187,22 +186,25 @@ const Status = () => {
     <View
       style={[styles.container, { backgroundColor: theme.background[1000] }]}
     >
-      <MapView
-        ref={mapViewRef}
-        style={styles.map}
-        initialRegion={{
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-        showsUserLocation={true}
-      >
-        <Marker coordinate={currentLocation} draggable={true}>
-          <Callout>
-            <Text>Drag to your current location.</Text>
-          </Callout>
-        </Marker>
-      </MapView>
-
+      <View style={styles.mapContainer}>
+        <MapView
+          ref={mapViewRef}
+          style={styles.map}
+          initialRegion={{
+            latitude: 0,
+            longitude: 0,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+          // showsUserLocation={true}
+        >
+          <Marker coordinate={currentLocation} draggable={true}>
+            <Callout>
+              <Text>Drag to your current location.</Text>
+            </Callout>
+          </Marker>
+        </MapView>
+      </View>
       {!isAlerted ? (
         <Pressable onPress={scaleAnimationBtn} style={styles.mainBtnContainer}>
           <View
@@ -271,13 +273,27 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    overflow: "hidden",
   },
-  map: {
+  mapContainer: {
     position: "absolute",
     width: "100%",
     height: "100%",
+    top: 0,
     borderRadius: 20,
+    overflow: "hidden",
   },
+  map: {
+    width: "100%",
+    height: "100%",
+  },
+  // map: {
+  //   position: "absolute",
+  //   width: "100%",
+  //   height: "100%",
+  //   borderRadius: 20,
+  //   overflow: "hidden",
+  // },
   mainBtnContainer: {
     width: 180,
     height: 180,
