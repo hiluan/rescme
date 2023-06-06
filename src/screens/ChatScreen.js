@@ -23,9 +23,11 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 // import bg from "../../assets/images/BG.png";
 import messages from "../../assets/data/messages.json";
 import { WINDOW_HEIGHT } from "../utils";
-import { useCallback, useRef } from "react";
+import { useCallback, useContext, useRef } from "react";
 import { AMessage } from "../components/Chats";
+import { ThemeContext } from "../context";
 const ChatScreen = () => {
+  const { theme } = useContext(ThemeContext);
   const ref = useRef(null);
 
   // const [chatRoom, setChatRoom] = useState(null);
@@ -99,11 +101,19 @@ const ChatScreen = () => {
   // }
 
   return (
-    // TODO: BOTTOMSHEET to show map of user's current location
-    <View>
+    <View
+      style={[styles.container, { backgroundColor: theme.background[950] }]}
+    >
+      {/* //TODO: create button to update current location */}
+      {/* {isMe && (
+        <TouchableOpacity
+          onPress={openLocation}
+          activeOpacity={0.7}
+        ></TouchableOpacity>
+      )} */}
       <FlatList
         data={messages}
-        renderItem={({ item }) => <AMessage message={item} />}
+        renderItem={({ item }) => <AMessage message={item} theme={theme} />}
         style={styles.list}
         inverted
       />
@@ -127,6 +137,7 @@ const ChatScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {},
   bg: {
     flex: 1,
   },

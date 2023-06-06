@@ -50,7 +50,7 @@ const Status = () => {
       }),
     ]).start(() => {
       setIsAlerted(true);
-      isAlerted ? null : navigation.navigate("Chat");
+      isAlerted ? null : navigation.navigate("Situation");
       // navigation.navigate("Group Info", { id: chatroomID })
     });
   };
@@ -187,6 +187,14 @@ const Status = () => {
     <View
       style={[styles.container, { backgroundColor: theme.background[1000] }]}
     >
+      {/* //TODO: create button to go back to chat && send update current location */}
+      {/* {isMe && (
+        <TouchableOpacity
+          onPress={openLocation}
+          activeOpacity={0.7}
+        ></TouchableOpacity>
+      )} */}
+
       <View style={styles.mapContainer}>
         {currentLocation.latitude && currentLocation.longitude ? (
           <MapView
@@ -292,7 +300,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: "100%",
-    height: "100%",
+    height: "110%", // hide google/apple logo at the bottom
   },
   // map: {
   //   position: "absolute",

@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: "100%",
-    height: 150,
+    height: 150, // hide google/apple logo at the bottom
   },
   currentLastMsgContainer: {
     height: "100%",

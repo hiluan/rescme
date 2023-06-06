@@ -11,7 +11,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
-const AMessage = ({ message }) => {
+const AMessage = ({ message, theme }) => {
   const [isMe, setIsMe] = useState(false);
 
   useEffect(() => {
@@ -30,16 +30,18 @@ const AMessage = ({ message }) => {
     Linking.openURL(url);
   };
 
+  const stylesContainer = {
+    backgroundColor: isMe ? theme.blueAccent[600] : theme.background[800],
+    alignSelf: isMe ? "flex-end" : "flex-start",
+    margin: 5,
+    padding: 10,
+    borderRadius: 10,
+    maxWidth: "80%",
+  };
+
+  const textColor = { color: theme.gray[0] };
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          backgroundColor: isMe ? "#DCF8C5" : "white",
-          alignSelf: isMe ? "flex-end" : "flex-start",
-        },
-      ]}
-    >
+    <View style={stylesContainer}>
       {hasLocation ? (
         <TouchableOpacity onPress={openLocation} activeOpacity={0.7}>
           <View style={styles.mapContainer}>
@@ -55,29 +57,25 @@ const AMessage = ({ message }) => {
             >
               <Marker coordinate={message.location} />
             </MapView>
-            <Text style={styles.coordinates}>
+            <Text style={[styles.coordinates, textColor]}>
               Latitude: {message.location.latitude.toFixed(6)}
             </Text>
-            <Text style={styles.coordinates}>
+            <Text style={[styles.coordinates, textColor]}>
               Longitude: {message.location.longitude.toFixed(6)}
             </Text>
           </View>
         </TouchableOpacity>
       ) : (
-        <Text>{message.text}</Text>
+        <Text style={[styles.text, textColor]}>{message.text}</Text>
       )}
-      <Text style={styles.time}>{dayjs(message.createdAt).fromNow(true)}</Text>
+      <Text style={[styles.createdAt, { color: theme.gray[300] }]}>
+        {dayjs(message.createdAt).fromNow(true)}
+      </Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    margin: 5,
-    padding: 10,
-    borderRadius: 10,
-    maxWidth: "80%",
-  },
   mapContainer: {
     alignItems: "center",
   },
@@ -90,8 +88,8 @@ const styles = StyleSheet.create({
   coordinates: {
     marginBottom: 5,
   },
-  time: {
-    color: "gray",
+  text: { fontSize: 16 },
+  createdAt: {
     alignSelf: "flex-end",
   },
 });
