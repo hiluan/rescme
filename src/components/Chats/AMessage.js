@@ -6,14 +6,20 @@ import {
   TouchableOpacity,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { MeContext } from "../../context";
 dayjs.extend(relativeTime);
 
-const AMessage = ({ message, theme }) => {
+const AMessage = ({
+  message,
+  theme,
+  // isMe, setIsMe
+}) => {
   const [isMe, setIsMe] = useState(false);
-
+  // const { isMe, setIsMe } = useContext(MeContext);
+  //TODO: FIX isMe context
   useEffect(() => {
     const isMyMessage = async () => {
       setIsMe(message.user.id === "u1");

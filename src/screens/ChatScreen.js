@@ -24,10 +24,11 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import messages from "../../assets/data/messages.json";
 import { WINDOW_HEIGHT } from "../utils";
 import { useCallback, useContext, useRef } from "react";
-import { AMessage } from "../components/Chats";
-import { ThemeContext } from "../context";
+import { AMessage, InputBox } from "../components/Chats";
+import { MeContext, ThemeContext } from "../context";
 const ChatScreen = () => {
   const { theme } = useContext(ThemeContext);
+  const { isMe, setIsMe } = useContext(MeContext);
   const ref = useRef(null);
 
   // const [chatRoom, setChatRoom] = useState(null);
@@ -101,7 +102,9 @@ const ChatScreen = () => {
   // }
 
   return (
-    <View
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 90}
       style={[styles.container, { backgroundColor: theme.background[950] }]}
     >
       {/* //TODO: create button to update current location */}
@@ -111,34 +114,32 @@ const ChatScreen = () => {
           activeOpacity={0.7}
         ></TouchableOpacity>
       )} */}
+
       <FlatList
         data={messages}
-        renderItem={({ item }) => <AMessage message={item} theme={theme} />}
+        renderItem={({ item }) => (
+          <AMessage
+            message={item}
+            theme={theme}
+            isMe={isMe}
+            setIsMe={setIsMe}
+          />
+        )}
         style={styles.list}
         inverted
       />
-      {/* <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 90}
-        style={styles.bg}
-      >
-        <ImageBackground source={bg} style={styles.bg}>
-          // <FlatList
-          //   data={messages}
-          //   renderItem={({ item }) => <Message message={item} />}
-          //   style={styles.list}
-          //   inverted
-          // />
-          <InputBox chatroomID={chatroomID} chatRoom={chatRoom} />
-        </ImageBackground>
-      </KeyboardAvoidingView> */}
-    </View>
+      <InputBox
+        theme={theme}
+        isMe={isMe}
+        // chatroomID={chatroomID} chatRoom={chatRoom}
+      />
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {},
-  bg: {
+  // container: {},
+  container: {
     flex: 1,
   },
   list: {
