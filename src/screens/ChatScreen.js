@@ -6,8 +6,12 @@ import {
   Platform,
   ActivityIndicator,
   Text,
+  TouchableOpacity,
   View,
+  Dimensions,
 } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
 // // import { getChatRoom, listMessagesByChatRoom } from "../graphql/queries";
 // // import { onCreateMessage, onUpdateChatRoom } from "../graphql/subscriptions";
 // // import { API, graphqlOperation, Auth } from "aws-amplify";
@@ -18,8 +22,13 @@ import {
 // import Message from "../components/Message";
 // import bg from "../../assets/images/BG.png";
 import messages from "../../assets/data/messages.json";
+import { WINDOW_HEIGHT } from "../utils";
+import BottomSheet from "../components/BottomSheet";
+import { useCallback, useRef } from "react";
 
 const ChatScreen = () => {
+  const ref = useRef(null);
+
   // const [chatRoom, setChatRoom] = useState(null);
   // const [messages, setMessages] = useState([]);
 
@@ -90,7 +99,18 @@ const ChatScreen = () => {
   //   return <ActivityIndicator />;
   // }
 
+  const onPress = useCallback(() => {
+    const isActive = ref?.current?.isActive();
+    if (isActive) {
+      ref?.current?.scrollTo(0);
+    } else {
+      ref?.current?.scrollTo(-WINDOW_HEIGHT / 1.5);
+      // ref?.current?.scrollTo(0.5);
+    }
+  }, []);
   return (
+    // TODO: BOTTOMSHEET to show map of user's current location
+    // <GestureHandlerRootView style={{ flex: 1 }}>
     <View>
       <Text>Hi</Text>
       {/* <KeyboardAvoidingView
@@ -109,6 +129,13 @@ const ChatScreen = () => {
         </ImageBackground>
       </KeyboardAvoidingView> */}
     </View>
+    //   <View style={styles.containerBottomSheet}>
+    //     <TouchableOpacity style={styles.showHistoryBtn} onPress={onPress} />
+    //     <BottomSheet ref={ref}>
+    //       <View style={{ flex: 1, backgroundColor: "orange" }} />
+    //     </BottomSheet>
+    //   </View>
+    // </GestureHandlerRootView>
   );
 };
 

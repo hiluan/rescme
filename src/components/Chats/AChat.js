@@ -6,10 +6,17 @@ import { useNavigation } from "@react-navigation/native";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import MapView, { Callout, Marker } from "react-native-maps";
+import { useContext } from "react";
+import { LocationContext } from "../../context";
+
 dayjs.extend(relativeTime);
 
-const AChat = ({ chat }) => {
+const AChat = ({ chat, theme }) => {
   const navigation = useNavigation();
+  const { currentLocation } = useContext(LocationContext);
+  const currentSituation =
+    (new Date() - dayjs(chat.lastMessage?.createdAt)) / (1000 * 60 * 60) <= 24;
 
   //   const [user, setUser] = useState(null);
   //   const [chatRoom, setChatRoom] = useState(chat);
@@ -45,88 +52,217 @@ const AChat = ({ chat }) => {
 
   return (
     <Pressable
-      onPress={
-        () => console.log(chat)
-        //   navigation.navigate(
-        // "Situation"
-        // , {
-        //   id: chatRoom.id,
-        //   name: user?.name,
-        // }
-        //   )
+      onPress={() =>
+        // console.log(chat)
+        navigation.navigate(
+          "Situation"
+          // , {
+          //   id: chatRoom.id,
+          //   name: user?.name,
+          // }
+        )
       }
-      style={styles.container}
+      style={[
+        styles.container,
+        {
+          height: currentSituation ? 120 : 60,
+        },
+      ]}
     >
-      <View style={styles.content}>
-        <View style={styles.situationTitleContainer}>
-          <Text style={styles.situationTitle} numberOfLines={1}>
-            {/* {chatRoom.name || user?.name} */}
-            Situation Name
-          </Text>
-          <Text style={styles.situationDate}>
-            {dayjs(chat.lastMessage?.createdAt).fromNow(true)}
-          </Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.name} numberOfLines={1}>
-            {/* {chatRoom.name || user?.name} */}
-            {chat.user.name}
-          </Text>
-          {/* {chatRoom.LastMessage && (
+      {currentSituation ? (
+        <View
+          style={[
+            styles.currentContainer,
+            { backgroundColor: theme.background[950] },
+          ]}
+        >
+          <View style={styles.mapContainer}>
+            <MapView
+              style={styles.map}
+              scrollEnabled={false}
+              initialRegion={{
+                latitude: currentLocation.latitude,
+                longitude: currentLocation.longitude,
+                latitudeDelta: 0.008,
+                longitudeDelta: 0.008,
+              }}
+            >
+              <Marker coordinate={currentLocation}></Marker>
+            </MapView>
+          </View>
+          <View
+            style={[
+              styles.currentLastMsgContainer,
+              {
+                borderBottomColor: theme.gray[700],
+              },
+            ]}
+          >
+            <View style={styles.situationTitleContainer}>
+              <Text
+                style={[
+                  styles.situationTitle,
+                  { color: theme.gray[200], fontSize: 16 },
+                ]}
+                numberOfLines={1}
+              >
+                {/* {chatRoom.name || user?.name} */}
+                Current Situation:
+              </Text>
+              <Text style={[styles.situationDate, { color: theme.gray[650] }]}>
+                {dayjs(chat.lastMessage?.createdAt).fromNow(true)}
+              </Text>
+            </View>
+            <Text
+              style={[
+                styles.situationTitle,
+                { color: theme.gray[200], fontSize: 16 },
+              ]}
+              numberOfLines={1}
+            >
+              {/* {chatRoom.name || user?.name} */}
+              User's Name
+            </Text>
+            <View style={styles.pastLastMessageContainer}>
+              <Text
+                style={[styles.name, { color: theme.gray[400] }]}
+                numberOfLines={2}
+              >
+                {/* {chatRoom.name || user?.name} */}
+                {chat.user.name}
+                {": "}
+                <Text
+                  style={[styles.lastMessage, { color: theme.gray[500] }]}
+                  numberOfLines={1}
+                >
+                  {chat.lastMessage?.text}
+                </Text>
+              </Text>
+              {/* {chatRoom.LastMessage && (
             <Text style={styles.situationDate}>
               {dayjs(chatRoom.LastMessage?.createdAt).fromNow(true)}
             </Text>
           )} */}
-          {/* <Text style={styles.situationDate}>
+              {/* <Text style={styles.situationDate}>
             {dayjs(chat.lastMessage?.createdAt).fromNow(true)}
           </Text> */}
+            </View>
+          </View>
         </View>
-        <Text style={styles.row} numberOfLines={1}>
-          {chat.lastMessage?.text}
-        </Text>
-      </View>
+      ) : (
+        <View
+          style={[
+            styles.pastContainer,
+            {
+              borderBottomColor: theme.gray[700],
+            },
+          ]}
+        >
+          <View style={styles.situationTitleContainer}>
+            <Text
+              style={[styles.situationTitle, { color: theme.gray[200] }]}
+              numberOfLines={1}
+            >
+              {/* {chatRoom.name || user?.name} */}
+              Situation Name
+            </Text>
+            <Text style={[styles.situationDate, { color: theme.gray[650] }]}>
+              {dayjs(chat.lastMessage?.createdAt).fromNow(true)}
+            </Text>
+          </View>
+          <View style={styles.pastLastMessageContainer}>
+            <Text
+              style={[styles.name, { color: theme.gray[400] }]}
+              numberOfLines={1}
+            >
+              {/* {chatRoom.name || user?.name} */}
+              {chat.user.name}
+              {": "}
+              <Text
+                style={[styles.lastMessage, { color: theme.gray[500] }]}
+                numberOfLines={1}
+              >
+                {chat.lastMessage?.text}
+              </Text>
+            </Text>
+            {/* {chatRoom.LastMessage && (
+            <Text style={styles.situationDate}>
+              {dayjs(chatRoom.LastMessage?.createdAt).fromNow(true)}
+            </Text>
+          )} */}
+            {/* <Text style={styles.situationDate}>
+            {dayjs(chat.lastMessage?.createdAt).fromNow(true)}
+          </Text> */}
+          </View>
+        </View>
+      )}
     </Pressable>
   );
 };
 
+export default AChat;
+
 const styles = StyleSheet.create({
   container: {
+    // backgroundColor: "gray",
     flexDirection: "row",
-    marginHorizontal: 10,
     marginVertical: 5,
-    height: 70,
+    marginHorizontal: 10,
   },
-  image: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+  currentContainer: {
+    flexDirection: "row",
+    width: "100%",
+    alignItems: "center",
+    // marginVertical: 5,
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  mapContainer: {
+    width: 120,
+    height: 120,
+    // marginBottom: -20,
+    // borderRadius: 10,
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
+    overflow: "hidden",
+  },
+  map: {
+    width: "100%",
+    height: 150,
+  },
+  currentLastMsgContainer: {
+    height: "100%",
+    flex: 1,
+    // width: "100%",
+    marginLeft: 20,
     marginRight: 10,
+    paddingTop: 15,
+    // backgroundColor: "gold",
   },
-
   situationTitleContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: "brown",
   },
   situationTitle: {
-    // flex: 1,
     fontWeight: "bold",
-    // backgroundColor: "red",
+    fontSize: 16,
   },
-  situationDate: { color: "gray" },
-
-  content: {
+  situationDate: {},
+  pastContainer: {
     flex: 1,
     // backgroundColor: "gold",
+    justifyContent: "center",
+    marginHorizontal: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: "lightgray",
   },
-  row: { flexDirection: "row", marginBottom: 5, color: "gray" },
+  pastLastMessageContainer: {
+    flexDirection: "row",
+  },
   name: {
     flex: 1,
-    fontWeight: "bold",
-    // backgroundColor: "red",
+    fontSize: 15,
+  },
+  lastMessage: {
+    fontSize: 15,
   },
 });
-
-export default AChat;

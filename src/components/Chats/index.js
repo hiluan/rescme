@@ -1,6 +1,6 @@
 import AChat from "./AChat";
 import AMessage from "./AMessage";
-import ArchivedChats from "./ArchivedChats";
+import Chats from "./Chats";
 import InputBox from "./InputBox";
 
-export { AChat, AMessage, ArchivedChats, InputBox };
+export { AChat, AMessage, Chats, InputBox };

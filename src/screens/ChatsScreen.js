@@ -10,7 +10,7 @@ import {
 import { LocationContext, ShowHistoryContext, ThemeContext } from "../context";
 import MapView, { Callout, Marker } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
-import { ArchivedChats } from "../components/Chats";
+import { Chats } from "../components/Chats";
 
 export default function ChatsScreen() {
   const { currentLocation } = useContext(LocationContext);
@@ -19,95 +19,81 @@ export default function ChatsScreen() {
   const navigation = useNavigation();
   const [animation] = useState(new Animated.Value(0));
 
-  useEffect(() => {
-    if (showHistory) {
-      Animated.timing(animation, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      Animated.timing(animation, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }
-  }, [showHistory]);
-
-  const handleTapOutsideArchivedChats = () => {
-    setShowHistory(false);
+  const stylesTitle = {
+    color: theme.gray[100],
+    marginVertical: 15,
+    marginLeft: 30,
+    fontSize: 14,
+    fontWeight: "bold",
+    textTransform: "uppercase",
   };
 
-  const translateY = animation.interpolate({
-    inputRange: [0, 3],
-    outputRange: [0, -200], // Adjust the value to control the slide distance
-  });
-
   return (
-    <TouchableWithoutFeedback onPress={handleTapOutsideArchivedChats}>
-      <View
-        style={[styles.container, { backgroundColor: theme.background[1000] }]}
+    <View
+      style={[styles.container, { backgroundColor: theme.background[1000] }]}
+    >
+      {/* <View style={styles.messagesContainer}> */}
+      {/* <Text style={stylesTitle}>Current Situation</Text>
+      <Pressable
+        onPress={() => navigation.navigate("Situation")}
+        style={styles.mapContainer}
       >
-        <Text style={styles.title}>Current Situation</Text>
-        <Pressable
-          onPress={() => navigation.navigate("Situation")}
-          style={styles.mapContainer}
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
+            latitudeDelta: 0.008,
+            longitudeDelta: 0.008,
+          }}
         >
-          <MapView
-            style={styles.map}
-            initialRegion={{
-              latitude: currentLocation.latitude,
-              longitude: currentLocation.longitude,
-              latitudeDelta: 0.008,
-              longitudeDelta: 0.008,
-            }}
-          >
-            <Marker coordinate={currentLocation} draggable={true}>
-              <Callout>
-                <Text>USER's location.</Text>
-              </Callout>
-            </Marker>
-          </MapView>
-        </Pressable>
-        <Animated.View
-          style={[styles.archivedChats, { transform: [{ translateY }] }]}
-        >
-          {showHistory && <ArchivedChats />}
-        </Animated.View>
-      </View>
-    </TouchableWithoutFeedback>
+          <Marker coordinate={currentLocation} draggable={true}>
+            <Callout>
+              <Text>USER's location.</Text>
+            </Callout>
+          </Marker>
+        </MapView>
+      </Pressable>
+      <View style={styles.separater}></View> */}
+
+      {/* // TODO: when there's backend db, set > 24 hours => PAST SITUATIONs */}
+      {/* <Text style={stylesTitle}>Past Situations</Text> */}
+      <Chats theme={theme} />
+      {/* </View> */}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    // alignItems: "center",
   },
-  title: {
-    backgroundColor: "red",
-    textAlign: "left",
-    fontSize: 16,
-    marginVertical: 15,
-  },
+  // messagesContainer: {
+  //   position: "absolute",
+  //   width: "100%",
+  //   height: "100%",
+  //   top: 0,
+  //   borderBottomRightRadius: 20,
+  //   borderBottomLeftRadius: 20,
+  //   overflow: "hidden",
+  // },
+
   mapContainer: {
-    width: "95%",
-    height: "30%",
-    top: 0,
+    marginHorizontal: 10,
+    height: "20%",
     borderRadius: 20,
     overflow: "hidden",
-    alignItems: "center",
+    // alignItems: "center",
+    // alignSelf: "center",
   },
   map: {
     width: "100%",
     height: "100%",
   },
-  archivedChats: {
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    height: "60%",
-    backgroundColor: "white",
+  separater: {
+    height: 30,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: "white",
   },
 });

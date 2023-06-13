@@ -1,5 +1,29 @@
 [
   {
+    "id": "13",
+    "user": {
+      "id": "u9",
+      "name": "Alina"
+    },
+    "lastMessage": {
+      "id": "m8",
+      "text": "Here is a picture of Mark.",
+      "createdAt": "2023-06-15T21:30:00.000Z"
+    }
+  },
+  {
+    "id": "14",
+    "user": {
+      "id": "u9",
+      "name": "Elsi"
+    },
+    "lastMessage": {
+      "id": "m8",
+      "text": "JAIk eli alie naoidf dalo orlen calkd iean ngay mai dlaie sang eale.",
+      "createdAt": "2023-06-15T15:40:00.000Z"
+    }
+  },
+  {
     "id": "1",
     "user": {
       "id": "u2",
