@@ -23,9 +23,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 // import bg from "../../assets/images/BG.png";
 import messages from "../../assets/data/messages.json";
 import { WINDOW_HEIGHT } from "../utils";
-import BottomSheet from "../components/BottomSheet";
 import { useCallback, useRef } from "react";
-
+import { AMessage } from "../components/Chats";
 const ChatScreen = () => {
   const ref = useRef(null);
 
@@ -99,43 +98,31 @@ const ChatScreen = () => {
   //   return <ActivityIndicator />;
   // }
 
-  const onPress = useCallback(() => {
-    const isActive = ref?.current?.isActive();
-    if (isActive) {
-      ref?.current?.scrollTo(0);
-    } else {
-      ref?.current?.scrollTo(-WINDOW_HEIGHT / 1.5);
-      // ref?.current?.scrollTo(0.5);
-    }
-  }, []);
   return (
     // TODO: BOTTOMSHEET to show map of user's current location
-    // <GestureHandlerRootView style={{ flex: 1 }}>
     <View>
-      <Text>Hi</Text>
+      <FlatList
+        data={messages}
+        renderItem={({ item }) => <AMessage message={item} />}
+        style={styles.list}
+        inverted
+      />
       {/* <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 90}
         style={styles.bg}
       >
         <ImageBackground source={bg} style={styles.bg}>
-          <FlatList
-            data={messages}
-            renderItem={({ item }) => <Message message={item} />}
-            style={styles.list}
-            inverted
-          />
+          // <FlatList
+          //   data={messages}
+          //   renderItem={({ item }) => <Message message={item} />}
+          //   style={styles.list}
+          //   inverted
+          // />
           <InputBox chatroomID={chatroomID} chatRoom={chatRoom} />
         </ImageBackground>
       </KeyboardAvoidingView> */}
     </View>
-    //   <View style={styles.containerBottomSheet}>
-    //     <TouchableOpacity style={styles.showHistoryBtn} onPress={onPress} />
-    //     <BottomSheet ref={ref}>
-    //       <View style={{ flex: 1, backgroundColor: "orange" }} />
-    //     </BottomSheet>
-    //   </View>
-    // </GestureHandlerRootView>
   );
 };
 

@@ -37,7 +37,11 @@ const Navigator = () => {
         <Stack.Screen name="Status" component={StatusScreen} />
         <Stack.Screen name="Add Contact" component={ContactAddScreen} />
         <Stack.Screen name="Contact" component={ContactScreen} />
-        <Stack.Screen name="Situation" component={ChatScreen} />
+        <Stack.Screen
+          name="Situation"
+          component={ChatScreen}
+          // options={{ headerShown: false }} // Hide header for "Situation" screen
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

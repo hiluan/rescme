@@ -16,12 +16,12 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import { ThemeContext } from "../../../context";
-import { WINDOW_HEIGHT } from "../../../utils";
+import { WINDOW_HEIGHT } from "../../utils";
+import { ThemeContext } from "../../context";
 
 const MAX_TRANSLATE_Y = -WINDOW_HEIGHT + 50; // max height of the bottom sheet
 
-const BottomSheet = React.forwardRef(({ children }, ref) => {
+const TopSheet = React.forwardRef(({ children }, ref) => {
   const { theme } = useContext(ThemeContext);
   const translateY = useSharedValue(0);
   const active = useSharedValue(false);
@@ -70,11 +70,11 @@ const BottomSheet = React.forwardRef(({ children }, ref) => {
     },
   });
 
-  const rBottomSheetStyle = useAnimatedStyle(() => {
+  const rTopSheetStyle = useAnimatedStyle(() => {
     const borderRadius = interpolate(
       translateY.value,
       [MAX_TRANSLATE_Y + 50, MAX_TRANSLATE_Y],
-      //   [25, 5], // borderRadius = 5 when bottomSheet at max height
+      //   [25, 5], // borderRadius = 5 when topSheet at max height
       [25, 25],
       Extrapolate.CLAMP
     );
@@ -101,7 +101,7 @@ const BottomSheet = React.forwardRef(({ children }, ref) => {
     <>
       <Animated.View
         onTouchStart={() => {
-          // Dismiss the BottomSheet
+          // Dismiss the TopSheet
           scrollTo(0);
         }}
         animatedProps={rBackdropProps}
@@ -114,7 +114,7 @@ const BottomSheet = React.forwardRef(({ children }, ref) => {
         ]}
       />
       <PanGestureHandler onGestureEvent={gestureHandler}>
-        <Animated.View style={[styles.bottomSheetContainer, rBottomSheetStyle]}>
+        <Animated.View style={[styles.topSheetContainer, rTopSheetStyle]}>
           <View style={styles.line} />
           {children}
         </Animated.View>
@@ -124,7 +124,7 @@ const BottomSheet = React.forwardRef(({ children }, ref) => {
 });
 
 const styles = StyleSheet.create({
-  bottomSheetContainer: {
+  topSheetContainer: {
     height: WINDOW_HEIGHT,
     width: "100%",
     backgroundColor: "white",
@@ -142,4 +142,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BottomSheet;
+export default TopSheet;
