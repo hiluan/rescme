@@ -18,13 +18,27 @@ const Stack = createNativeStackNavigator();
 const Navigator = () => {
   const { theme } = useContext(ThemeContext);
 
-  const ContactScreenOptions = ({ navigation }) => ({
+  const ContactScreenOptions = ({ navigation, route }) => ({
     headerRight: () => (
       <TouchableOpacity
         style={{ marginRight: 10 }}
-        onPress={() => navigation.navigate("Edit Contact")}
+        onPress={() =>
+          navigation.navigate("Edit Contact", { contact: route.params.contact })
+        }
       >
-        <Text style={{ color: theme.gray[200] }}>Edit</Text>
+        <Text
+          style={{
+            // color: "white",
+            // padding: 3,
+            // paddingHorizontal: 10,
+            // borderRadius: 5,
+            // backgroundColor: theme.redAccent[500],
+            color: theme.redAccent[500],
+            fontSize: 18,
+          }}
+        >
+          Edit
+        </Text>
       </TouchableOpacity>
     ),
     headerRightContainerStyle: { paddingRight: 10 },

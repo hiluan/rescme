@@ -8,37 +8,37 @@ export { AContact, ContactOnline, DialPad, countryCodes };
 export const contacts = [
   {
     name: "Haie",
-    phone: "123456789",
+    phone: "(123) 456-7890",
     online: true,
   },
   {
     name: "Piee",
-    phone: "123456789",
+    phone: "(123) 456-7890",
     online: false,
   },
   {
     name: "Aelak",
-    phone: "123456789",
+    phone: "(123) 456-7890",
     online: true,
   },
   {
     name: "Foaeld Dela",
-    phone: "123456789",
+    phone: "(123) 456-7890",
     online: false,
   },
   {
     name: "Dad",
-    phone: "123456789",
+    phone: "(123) 456-7890",
     online: true,
   },
   {
     name: "Mama",
-    phone: "123456789",
+    phone: "(123) 456-7890",
     online: true,
   },
   {
     name: "Bro",
-    phone: "123456789",
+    phone: "(123) 456-7890",
     online: true,
   },
 ];

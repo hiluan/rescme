@@ -36,9 +36,9 @@ const ContactsScreen = () => {
         data={contacts.sort((a, b) => a.name.localeCompare(b.name))}
         renderItem={({ item }) => (
           <AContact
-            user={item}
+            contact={item}
             theme={theme}
-            onPress={() => navigation.navigate("Contact", { id: item.phone })}
+            onPress={() => navigation.navigate("Contact", { contact: item })}
           />
         )}
       />

@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 import React from "react";
 
-const AContact = ({ user, theme, onPress = () => {} }) => {
+const AContact = ({ contact, theme, onPress = () => {} }) => {
   const navigation = useNavigation();
 
   return (
@@ -16,13 +16,13 @@ const AContact = ({ user, theme, onPress = () => {} }) => {
         ]}
       >
         <Text style={[styles.name, { color: theme.gray[0] }]} numberOfLines={1}>
-          {user.name}
+          {contact.name}
         </Text>
         <Text
           style={[styles.phone, { color: theme.gray[200] }]}
           numberOfLines={2}
         >
-          {user.phone}
+          {contact.phone}
         </Text>
       </View>
     </Pressable>

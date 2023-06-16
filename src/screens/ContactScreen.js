@@ -10,16 +10,11 @@ import {
 } from "react-native";
 import { ThemeContext } from "../context";
 
-//TODO: ONLY EDIT NAME
-const ContactScreen = () => {
+//TODO: fix the padding, not straight between +1 and 564 556  5656
+
+const ContactScreen = ({ route, navigation }) => {
   const { theme } = useContext(ThemeContext);
-  const background950 = { backgroundColor: theme.background[950] };
-  const [number, setNumber] = useState("");
-  const [numberOnly, setNumberOnly] = useState("");
-  const [name, setName] = useState("");
-  const [existingUser, setExistingUser] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false); // State to toggle the dropdown
-  const dropdownRef = useRef(null); // Reference to the dropdown view
+  const { contact } = route.params;
 
   const stylesInputText = {
     flex: 1,
@@ -28,11 +23,11 @@ const ContactScreen = () => {
     paddingLeft: 80,
     color: theme.gray[0],
     borderColor: theme.background[500],
-    borderBottomWidth: StyleSheet.hairlineWidth,
     paddingTop: 12,
     // alignItems: "center",
     // justifyContent: "center",
   };
+  const background950 = { backgroundColor: theme.background[950] };
 
   return (
     <View style={[styles.container, background950]}>
@@ -40,30 +35,25 @@ const ContactScreen = () => {
       <View
         style={[
           styles.inputContainer,
-          { backgroundColor: theme.background[900] },
+          // { backgroundColor: theme.background[900] },
         ]}
       >
-        <View
-          style={[
-            styles.dropdownButton,
-            { backgroundColor: theme.background[500] },
-          ]}
-        >
-          <Text style={{ color: "white", fontSize: 18 }}>🇺🇸 +1</Text>
+        <View style={[styles.dropdownButton]}>
+          <Text style={{ color: theme.gray[0], fontSize: 18 }}>🇺🇸 +1</Text>
         </View>
 
-        <Text style={stylesInputText}>(408) 515-5444</Text>
+        <Text style={stylesInputText}>{contact.phone}</Text>
       </View>
 
       <View
         style={[
           styles.inputContainer,
-          { backgroundColor: theme.background[900] },
+          // { backgroundColor: theme.background[900] },
         ]}
       >
         <Text style={[styles.title, { color: theme.gray[300] }]}>Name</Text>
 
-        <Text style={stylesInputText}>Contact's Name</Text>
+        <Text style={stylesInputText}>{contact.name}</Text>
       </View>
     </View>
   );
@@ -78,7 +68,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    // alignSelf: "center",
     justifyContent: "center",
   },
   dropdownButton: {
